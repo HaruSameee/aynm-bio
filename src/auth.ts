@@ -1,0 +1,45 @@
+import { DrizzleAdapter } from "@auth/drizzle-adapter";
+import NextAuth from "next-auth";
+import Discord from "next-auth/providers/discord";
+
+import { db } from "@/db";
+import { accounts, sessions, users, verificationTokens } from "@/db/schema";
+
+const allowedDiscordIds = new Set(
+  (process.env.ALLOWED_DISCORD_IDS ?? "")
+    .split(",")
+    .map((value) => value.trim())
+    .filter(Boolean),
+);
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  adapter: DrizzleAdapter(db, {
+    usersTable: users,
+    accountsTable: accounts,
+    sessionsTable: sessions,
+    verificationTokensTable: verificationTokens,
+  }),
+  secret: process.env.AUTH_SECRET,
+  providers: [
+    Discord({
+      clientId: process.env.AUTH_DISCORD_ID ?? "",
+      clientSecret: process.env.AUTH_DISCORD_SECRET ?? "",
+    }),
+  ],
+  callbacks: {
+    async signIn({ account }) {
+      if (account?.provider !== "discord") {
+        return false;
+      }
+
+      return allowedDiscordIds.has(account.providerAccountId);
+    },
+    async session({ session, user }) {
+      if (session.user) {
+        session.user.id = user.id;
+      }
+
+      return session;
+    },
+  },
+});
