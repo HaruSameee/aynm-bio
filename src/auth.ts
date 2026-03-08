@@ -29,6 +29,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
   callbacks: {
     async signIn({ account }) {
+      console.log("[DEBUG] provider:", account?.provider);
+      console.log("[DEBUG] providerAccountId:", account?.providerAccountId);
+      console.log("[DEBUG] allowedIds:", [...allowedDiscordIds]);
+      console.log(
+        "[DEBUG] isAllowed:",
+        allowedDiscordIds.has(account?.providerAccountId ?? ""),
+      );
+
       if (account?.provider !== "discord") {
         return false;
       }
