@@ -20,6 +20,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     verificationTokensTable: verificationTokens,
   }),
   secret: process.env.AUTH_SECRET,
+  debug: true,
   providers: [
     Discord({
       clientId: process.env.AUTH_DISCORD_ID ?? "",
