@@ -25,8 +25,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   session: { strategy: "jwt" },
   logger: {
     error(code, ...message) {
-      console.error("[AUTH ERROR CODE]", code);
-      console.error("[AUTH ERROR DETAIL]", JSON.stringify(message, null, 2));
+      console.error("[AUTH ERROR CODE]", String(code));
+      const err = message[0];
+      if (err && typeof err === "object" && "cause" in err) {
+        console.error("[AUTH ERROR CAUSE]", JSON.stringify(err.cause, null, 2));
+        console.error("[AUTH ERROR CAUSE STR]", String(err.cause));
+      }
+      console.error("[AUTH ERROR FULL]", JSON.stringify(message, null, 2));
     },
     warn(code) {
       console.warn("[AUTH WARN]", code);
