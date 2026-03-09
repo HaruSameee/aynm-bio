@@ -1,9 +1,9 @@
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
+// import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import NextAuth from "next-auth";
 import Discord from "next-auth/providers/discord";
 
-import { db } from "@/db";
-import { accounts, sessions, users, verificationTokens } from "@/db/schema";
+// import { db } from "@/db";
+// import { accounts, sessions, users, verificationTokens } from "@/db/schema";
 
 const allowedDiscordIds = new Set(
   (process.env.ALLOWED_DISCORD_IDS ?? "")
@@ -13,15 +13,16 @@ const allowedDiscordIds = new Set(
 );
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: DrizzleAdapter(db, {
-    usersTable: users,
-    accountsTable: accounts,
-    sessionsTable: sessions,
-    verificationTokensTable: verificationTokens,
-  }),
+  // adapter: DrizzleAdapter(db, {
+  //   usersTable: users,
+  //   accountsTable: accounts,
+  //   sessionsTable: sessions,
+  //   verificationTokensTable: verificationTokens,
+  // }),
   secret: process.env.AUTH_SECRET,
   debug: true,
   trustHost: true,
+  session: { strategy: "jwt" },
   logger: {
     error(code, ...message) {
       console.error("[AUTH ERROR CODE]", code);
