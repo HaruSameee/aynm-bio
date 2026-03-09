@@ -2,6 +2,7 @@ import { eq } from "drizzle-orm";
 
 import { db } from "@/db";
 import { profiles } from "@/db/schema";
+import { isReservedUsername, normalizeUsername } from "@/lib/username";
 
 export const dynamic = "force-dynamic";
 
@@ -11,11 +12,16 @@ type RouteContext = {
 
 export async function GET(_: Request, { params }: RouteContext) {
   const { username } = await params;
+  const normalizedUsername = normalizeUsername(username);
+
+  if (isReservedUsername(normalizedUsername)) {
+    return new Response("Not Found", { status: 404 });
+  }
 
   const [profile] = await db
     .select()
     .from(profiles)
-    .where(eq(profiles.username, username))
+    .where(eq(profiles.username, normalizedUsername))
     .limit(1);
 
   if (!profile) {
