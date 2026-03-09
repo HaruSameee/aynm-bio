@@ -22,6 +22,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   secret: process.env.AUTH_SECRET,
   debug: true,
   trustHost: true,
+  logger: {
+    error(code, ...message) {
+      console.error("[AUTH ERROR CODE]", code);
+      console.error("[AUTH ERROR DETAIL]", JSON.stringify(message, null, 2));
+    },
+    warn(code) {
+      console.warn("[AUTH WARN]", code);
+    },
+    debug(code, metadata) {
+      console.log("[AUTH DEBUG]", code, JSON.stringify(metadata, null, 2));
+    },
+  },
   providers: [
     Discord({
       clientId: process.env.AUTH_DISCORD_ID ?? "",
