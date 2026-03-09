@@ -24,14 +24,34 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: true,
   session: { strategy: "jwt" },
   logger: {
-    error(code, ...message) {
-      console.error("[AUTH ERROR CODE]", String(code));
-      const err = message[0];
-      if (err && typeof err === "object" && "cause" in err) {
-        console.error("[AUTH ERROR CAUSE]", JSON.stringify(err.cause, null, 2));
-        console.error("[AUTH ERROR CAUSE STR]", String(err.cause));
+    error(error) {
+      const authError = error as Error & { type?: string; cause?: unknown };
+
+      console.error(
+        "[AUTH ERROR CODE]",
+        String(authError.type ?? authError.name ?? "UnknownAuthError"),
+      );
+      if ("cause" in authError) {
+        console.error(
+          "[AUTH ERROR CAUSE]",
+          JSON.stringify(authError.cause, null, 2),
+        );
+        console.error("[AUTH ERROR CAUSE STR]", String(authError.cause));
       }
-      console.error("[AUTH ERROR FULL]", JSON.stringify(message, null, 2));
+      console.error(
+        "[AUTH ERROR FULL]",
+        JSON.stringify(
+          {
+            name: authError.name,
+            message: authError.message,
+            stack: authError.stack,
+            type: authError.type,
+            cause: authError.cause,
+          },
+          null,
+          2,
+        ),
+      );
     },
     warn(code) {
       console.warn("[AUTH WARN]", code);
