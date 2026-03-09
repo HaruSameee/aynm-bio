@@ -52,9 +52,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       console.log("[DEBUG] allowedIds set:", [...allowedDiscordIds]);
       return true;
     },
-    async session({ session, user }) {
+    async session({ session, token }) {
       if (session.user) {
-        session.user.id = user.id;
+        session.user.id = token.sub ?? "";
       }
 
       return session;
