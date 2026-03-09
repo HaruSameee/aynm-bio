@@ -88,6 +88,7 @@ function lineCount(value: string) {
 }
 
 export function ProfileEditor({ currentUser, profile }: ProfileEditorProps) {
+  const [activeTab, setActiveTab] = useState<"card" | "live">("card");
   const [username, setUsername] = useState(profile?.username ?? "");
   const [displayName, setDisplayName] = useState(profile?.displayName ?? "");
   const [rawHtml, setRawHtml] = useState(profile?.rawHtml ?? "");
@@ -101,6 +102,19 @@ export function ProfileEditor({ currentUser, profile }: ProfileEditorProps) {
     "Write a short intro, drop in custom markup, or ship a full mini profile page.";
   const initials = getInitials(previewName);
   const publicHref = username.trim() ? `/${username.trim()}` : undefined;
+  const srcdoc = `<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${displayName || "Preview"}</title>
+  <style>${rawCss}</style>
+</head>
+<body>
+  ${rawHtml}
+  <script>${rawJs}<\/script>
+</body>
+</html>`;
 
   return (
     <div className="grid gap-6 xl:grid-cols-[minmax(0,1.2fr)_380px]">
@@ -229,94 +243,122 @@ export function ProfileEditor({ currentUser, profile }: ProfileEditorProps) {
             <div className="mt-1 text-lg font-semibold text-white">
               Discord-style card
             </div>
+            <div className="mt-2 flex gap-2">
+              {["card", "live"].map((tab) => (
+                <button
+                  key={tab}
+                  className={`rounded-full px-3 py-1 text-xs font-semibold transition ${
+                    activeTab === tab
+                      ? "bg-[#5865f2] text-white"
+                      : "text-[#949ba4] hover:text-white"
+                  }`}
+                  onClick={() => setActiveTab(tab as "card" | "live")}
+                  type="button"
+                >
+                  {tab === "card" ? "Card" : "Live"}
+                </button>
+              ))}
+            </div>
           </div>
 
           <div className="p-4">
-            <div className="overflow-hidden rounded-[28px] border border-[#3a3f60] bg-[#1e2235] shadow-[0_22px_50px_rgba(0,0,0,0.25)]">
-              <div className="h-28 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.35),transparent_35%),linear-gradient(120deg,#5865f2_0%,#7a5cf5_35%,#eb459e_100%)]" />
-              <div className="px-5 pb-5">
-                <div className="-mt-11 flex items-end justify-between gap-3">
-                  <div className="relative">
-                    <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 border-[#1e2235] bg-[#2b2f45] text-2xl font-bold text-white shadow-[0_16px_40px_rgba(0,0,0,0.25)]">
-                      {currentUser.image ? (
-                        <img
-                          alt={previewName}
-                          className="h-full w-full object-cover"
-                          src={currentUser.image}
+            {activeTab === "card" ? (
+              <div className="overflow-hidden rounded-[28px] border border-[#3a3f60] bg-[#1e2235] shadow-[0_22px_50px_rgba(0,0,0,0.25)]">
+                <div className="h-28 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.35),transparent_35%),linear-gradient(120deg,#5865f2_0%,#7a5cf5_35%,#eb459e_100%)]" />
+                <div className="px-5 pb-5">
+                  <div className="-mt-11 flex items-end justify-between gap-3">
+                    <div className="relative">
+                      <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 border-[#1e2235] bg-[#2b2f45] text-2xl font-bold text-white shadow-[0_16px_40px_rgba(0,0,0,0.25)]">
+                        {currentUser.image ? (
+                          <img
+                            alt={previewName}
+                            className="h-full w-full object-cover"
+                            src={currentUser.image}
+                          />
+                        ) : (
+                          initials
+                        )}
+                      </div>
+                      <span className="absolute bottom-2 right-1 h-5 w-5 rounded-full border-4 border-[#1e2235] bg-[#43b581]" />
+                    </div>
+                    <div className="rounded-full border border-[#3d4467] bg-[#f2f3f5] px-4 py-2 text-sm font-semibold text-[#4f5660] shadow-[0_10px_20px_rgba(0,0,0,0.15)]">
+                      Add status
+                    </div>
+                  </div>
+
+                  <div className="mt-4 rounded-[24px] bg-[linear-gradient(180deg,rgba(17,19,31,0.18),rgba(255,255,255,0.06))] p-4">
+                    <div className="text-3xl font-semibold tracking-tight text-white">
+                      {previewName}
+                    </div>
+                    <div className="mt-1 text-sm text-[#b5bac1]">
+                      @{previewHandle}
+                    </div>
+                    <div className="mt-4 flex items-center gap-2">
+                      {previewAccents.map((accent) => (
+                        <span
+                          key={accent}
+                          className={`h-2.5 w-2.5 rounded-full ${accent}`}
                         />
-                      ) : (
-                        initials
-                      )}
+                      ))}
+                      <span className="text-xs uppercase tracking-[0.22em] text-[#949ba4]">
+                        Profile signals
+                      </span>
                     </div>
-                    <span className="absolute bottom-2 right-1 h-5 w-5 rounded-full border-4 border-[#1e2235] bg-[#43b581]" />
-                  </div>
-                  <div className="rounded-full border border-[#3d4467] bg-[#f2f3f5] px-4 py-2 text-sm font-semibold text-[#4f5660] shadow-[0_10px_20px_rgba(0,0,0,0.15)]">
-                    Add status
-                  </div>
-                </div>
 
-                <div className="mt-4 rounded-[24px] bg-[linear-gradient(180deg,rgba(17,19,31,0.18),rgba(255,255,255,0.06))] p-4">
-                  <div className="text-3xl font-semibold tracking-tight text-white">
-                    {previewName}
-                  </div>
-                  <div className="mt-1 text-sm text-[#b5bac1]">@{previewHandle}</div>
-                  <div className="mt-4 flex items-center gap-2">
-                    {previewAccents.map((accent) => (
-                      <span
-                        key={accent}
-                        className={`h-2.5 w-2.5 rounded-full ${accent}`}
-                      />
-                    ))}
-                    <span className="text-xs uppercase tracking-[0.22em] text-[#949ba4]">
-                      Profile signals
-                    </span>
-                  </div>
+                    <div className="mt-5 rounded-[22px] border border-white/10 bg-[#10131f]/75 p-4">
+                      <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#949ba4]">
+                        About me
+                      </div>
+                      <p className="mt-2 text-sm leading-6 text-[#dbdee1]">
+                        {previewBio}
+                      </p>
+                    </div>
 
-                  <div className="mt-5 rounded-[22px] border border-white/10 bg-[#10131f]/75 p-4">
-                    <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#949ba4]">
-                      About me
+                    <div className="mt-5 grid grid-cols-3 gap-3">
+                      <div className="rounded-[20px] border border-white/10 bg-[#10131f]/75 p-3">
+                        <div className="text-[11px] uppercase tracking-[0.18em] text-[#949ba4]">
+                          HTML
+                        </div>
+                        <div className="mt-1 text-lg font-semibold text-white">
+                          {lineCount(rawHtml)}
+                        </div>
+                        <div className="text-xs text-[#949ba4]">lines</div>
+                      </div>
+                      <div className="rounded-[20px] border border-white/10 bg-[#10131f]/75 p-3">
+                        <div className="text-[11px] uppercase tracking-[0.18em] text-[#949ba4]">
+                          CSS
+                        </div>
+                        <div className="mt-1 text-lg font-semibold text-white">
+                          {lineCount(rawCss)}
+                        </div>
+                        <div className="text-xs text-[#949ba4]">lines</div>
+                      </div>
+                      <div className="rounded-[20px] border border-white/10 bg-[#10131f]/75 p-3">
+                        <div className="text-[11px] uppercase tracking-[0.18em] text-[#949ba4]">
+                          JS
+                        </div>
+                        <div className="mt-1 text-lg font-semibold text-white">
+                          {lineCount(rawJs)}
+                        </div>
+                        <div className="text-xs text-[#949ba4]">lines</div>
+                      </div>
                     </div>
-                    <p className="mt-2 text-sm leading-6 text-[#dbdee1]">
-                      {previewBio}
-                    </p>
-                  </div>
 
-                  <div className="mt-5 grid grid-cols-3 gap-3">
-                    <div className="rounded-[20px] border border-white/10 bg-[#10131f]/75 p-3">
-                      <div className="text-[11px] uppercase tracking-[0.18em] text-[#949ba4]">
-                        HTML
-                      </div>
-                      <div className="mt-1 text-lg font-semibold text-white">
-                        {lineCount(rawHtml)}
-                      </div>
-                      <div className="text-xs text-[#949ba4]">lines</div>
+                    <div className="mt-5 rounded-[22px] border border-[#5562b8] bg-[#5865f2] px-4 py-3 text-center text-sm font-semibold text-white shadow-[0_16px_28px_rgba(88,101,242,0.35)]">
+                      Button example
                     </div>
-                    <div className="rounded-[20px] border border-white/10 bg-[#10131f]/75 p-3">
-                      <div className="text-[11px] uppercase tracking-[0.18em] text-[#949ba4]">
-                        CSS
-                      </div>
-                      <div className="mt-1 text-lg font-semibold text-white">
-                        {lineCount(rawCss)}
-                      </div>
-                      <div className="text-xs text-[#949ba4]">lines</div>
-                    </div>
-                    <div className="rounded-[20px] border border-white/10 bg-[#10131f]/75 p-3">
-                      <div className="text-[11px] uppercase tracking-[0.18em] text-[#949ba4]">
-                        JS
-                      </div>
-                      <div className="mt-1 text-lg font-semibold text-white">
-                        {lineCount(rawJs)}
-                      </div>
-                      <div className="text-xs text-[#949ba4]">lines</div>
-                    </div>
-                  </div>
-
-                  <div className="mt-5 rounded-[22px] border border-[#5562b8] bg-[#5865f2] px-4 py-3 text-center text-sm font-semibold text-white shadow-[0_16px_28px_rgba(88,101,242,0.35)]">
-                    Button example
                   </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              <iframe
+                className="w-full rounded-[28px] border-0"
+                sandbox="allow-scripts"
+                srcDoc={srcdoc}
+                style={{ height: "600px" }}
+                title="Live preview"
+              />
+            )}
           </div>
         </div>
       </aside>
