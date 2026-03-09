@@ -1,46 +1,98 @@
 # aynm-bio
 
-Next.js App Router ベースのプロフィールホスティングサービスです。  
-Discord ログイン経由でプロフィールを編集し、`/[username]` で HTML を直接配信する構成です。
+Discord ユーザー向けのプロフィールホスティングサービスです。  
+Discord ログイン後に `/dashboard` でプロフィールを編集し、`/[username]` で公開ページを配信します。
+
+## 概要
+
+- Discord OAuth でログイン
+- ホワイトリスト方式でログイン可能ユーザーを制限
+- プロフィール本文を `rawHtml` / `rawCss` / `rawJs` として保存
+- ダッシュボードで Card / Live の 2 種類プレビューを確認
+- `username` ごとの公開ページを Route Handler で直接返却
 
 ## 技術スタック
 
-- Next.js 15
+- Next.js 15 App Router
 - TypeScript
 - Tailwind CSS
 - Auth.js v5
 - Drizzle ORM
-- Postgres
+- postgres.js
 
-## 主な機能
+## 認証
 
-- Discord ログイン
-- `/dashboard` でプロフィール編集
-- `username` ごとの公開ページ配信
-- Drizzle によるスキーマ管理と migration
+- Provider は Discord のみ
+- `ALLOWED_DISCORD_IDS` に含まれる Discord User ID のみサインイン可能
+- `/dashboard` 以下は middleware で保護
+- Auth.js は Drizzle Adapter を使って `users` / `accounts` / `sessions` / `verification_tokens` を利用
 
-## 現在の状態
+## プロフィールデータ
 
-認証まわりはデバッグ中です。現時点では以下の一時対応が入っています。
+`profiles` テーブルには以下を保存します。
 
-- Auth.js の Drizzle Adapter は無効化中
-- Session 戦略は `jwt`
-- `signIn` callback はデバッグログを出したうえで一時的に `return true`
-- `logger` を有効化して Auth.js の詳細エラーを出力
+- `userId`
+- `username`
+- `displayName`
+- `rawHtml`
+- `rawCss`
+- `rawJs`
+- `createdAt`
+- `updatedAt`
 
-そのため、README 上の認証仕様は「本来の目標」ではなく「現在の実装状態」に合わせています。
+`username` はサーバー側でバリデーションしています。
+
+- 3〜32 文字
+- 使用可能文字は小文字英数字、`-`、`_`
+- `api` / `dashboard` / `_next` などの予約パスは禁止
+- `.` を含む名前は禁止
+
+## ダッシュボード
+
+ダッシュボードは Discord 風の UI です。
+
+- 左側に編集フォーム
+- 右側にプレビュー
+- `Card` タブで Discord ライクなカード表示
+- `Live` タブで `iframe srcDoc` による実レンダリング確認
+
+Live プレビューは公開ルートと同じ構造の HTML を使います。
+
+```html
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${displayName}</title>
+  <style>${rawCss}</style>
+</head>
+<body>
+  ${rawHtml}
+  <script>${rawJs}<\/script>
+</body>
+</html>
+```
+
+## 公開ルート
+
+- `/` : トップページ
+- `/dashboard` : プロフィール編集画面
+- `/[username]` : 公開プロフィールページ
+- `/api/auth/[...nextauth]` : Auth.js ハンドラ
+
+`/[username]` は Route Handler で HTML 文字列を直接返します。  
+`rawHtml` / `rawCss` / `rawJs` はサニタイズせずそのまま埋め込みます。
 
 ## セットアップ
 
-### 1. 依存関係のインストール
+### 1. 依存関係をインストール
 
 ```bash
 npm install
 ```
 
-### 2. 環境変数の設定
-
-`.env.local` を作成して、以下を設定してください。
+### 2. `.env.local` を作成
 
 ```env
 AUTH_SECRET=
@@ -50,19 +102,19 @@ POSTGRES_URL=
 ALLOWED_DISCORD_IDS=
 ```
 
-### 3. マイグレーションの実行
+### 3. マイグレーションを適用
 
 ```bash
 npm run db:migrate
 ```
 
-必要に応じて SQL 生成だけ先に行う場合:
+必要に応じて先に migration SQL を生成する場合:
 
 ```bash
 npm run db:generate
 ```
 
-### 4. 開発サーバー起動
+### 4. 開発サーバーを起動
 
 ```bash
 npm run dev
@@ -95,6 +147,8 @@ src/
   db/
     index.ts
     schema.ts
+  lib/
+    username.ts
   auth.ts
   types/next-auth.d.ts
 middleware.ts
@@ -103,22 +157,10 @@ drizzle.config.ts
 
 ## DB 接続
 
-`src/db/index.ts` では `postgres.js` を使っています。  
-サーバーレス向けに接続数を抑えるため、以下の設定を入れています。
+`src/db/index.ts` では `postgres.js` を使用しています。  
+サーバーレス環境向けに以下の設定を入れています。
 
+- `ssl: "require"`
 - `max: 1`
 - `idle_timeout: 20`
 - `connect_timeout: 10`
-- `ssl: "require"`
-
-## 公開ルート
-
-- `/` : トップページ
-- `/dashboard` : ログイン後の編集画面
-- `/[username]` : プロフィール公開ページ
-- `/api/auth/[...nextauth]` : Auth.js ハンドラ
-
-## 補足
-
-`/[username]` は Route Handler で HTML を直接返します。  
-`rawHtml`、`rawCss`、`rawJs` はサニタイズせず、そのままレスポンスへ埋め込みます。
