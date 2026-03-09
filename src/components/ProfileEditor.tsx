@@ -317,35 +317,6 @@ export function ProfileEditor({ currentUser, profile }: ProfileEditorProps) {
                 </div>
               </div>
             </div>
-
-            <div className="mt-5 rounded-[24px] border border-white/10 bg-[#171a2d] p-4">
-              <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#949ba4]">
-                Nameplate
-              </div>
-              <div className="mt-3 overflow-hidden rounded-full border border-[#41235f] bg-[linear-gradient(90deg,#25103f_0%,#48227a_48%,#ff7dd9_100%)] p-[1px]">
-                <div className="flex items-center gap-3 rounded-full bg-[linear-gradient(90deg,#1a1230_0%,#2a1750_52%,rgba(255,255,255,0.18)_100%)] px-3 py-2">
-                  <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-[#2b2f45] text-xs font-bold text-white">
-                    {currentUser.image ? (
-                      <img
-                        alt={previewName}
-                        className="h-full w-full object-cover"
-                        src={currentUser.image}
-                      />
-                    ) : (
-                      initials
-                    )}
-                  </div>
-                  <div className="min-w-0">
-                    <div className="truncate text-base font-semibold text-white">
-                      {previewName}
-                    </div>
-                    <div className="truncate text-xs text-[#d8d4ff]">
-                      @{previewHandle}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </aside>

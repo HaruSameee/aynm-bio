@@ -23,20 +23,14 @@ export default async function DashboardPage() {
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-8 px-5 py-8 sm:px-6 lg:px-8 lg:py-10">
       <header className="space-y-4">
-        <div className="inline-flex items-center gap-2 rounded-full border border-[#3f4371] bg-[#171a2d]/80 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[#b5bac1]">
-          Dashboard
-          <span className="h-1 w-1 rounded-full bg-[#5865f2]" />
-          Discord-style studio
+        <div className="inline-flex items-center rounded-full border border-[#3f4371] bg-[#171a2d]/80 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[#b5bac1]">
+          bio-dashboard
         </div>
         <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-          <div className="space-y-2">
+          <div>
             <h1 className="text-4xl font-semibold tracking-tight text-white sm:text-5xl">
               Profile Studio
             </h1>
-            <p className="max-w-2xl text-sm leading-6 text-[#b5bac1] sm:text-base">
-              Tune your public card with a Discord-inspired editor and preview
-              the result before you publish it.
-            </p>
           </div>
           <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-[#dbdee1] shadow-[0_20px_45px_rgba(0,0,0,0.18)] backdrop-blur">
             <div className="text-xs uppercase tracking-[0.22em] text-[#949ba4]">
