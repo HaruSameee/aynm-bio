@@ -2,8 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  color-scheme: dark;
+}
+
+html {
+  min-height: 100%;
+}
+
 body {
-  @apply min-h-screen bg-slate-950 text-slate-100 antialiased;
+  @apply min-h-screen text-slate-100 antialiased;
+  background:
+    radial-gradient(circle at top left, rgba(88, 101, 242, 0.26), transparent 28%),
+    radial-gradient(circle at top right, rgba(235, 69, 158, 0.18), transparent 24%),
+    radial-gradient(circle at bottom center, rgba(87, 242, 135, 0.1), transparent 28%),
+    linear-gradient(180deg, #090b13 0%, #101320 48%, #0a0c14 100%);
+  font-family:
+    "Avenir Next",
+    "Trebuchet MS",
+    "Hiragino Kaku Gothic ProN",
+    "Yu Gothic",
+    sans-serif;
 }
 
 a {
@@ -13,4 +32,13 @@ a {
 input,
 textarea {
   @apply outline-none;
+}
+
+textarea {
+  resize: vertical;
+}
+
+::selection {
+  background: rgba(88, 101, 242, 0.35);
+  color: white;
 }
