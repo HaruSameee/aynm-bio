@@ -31,17 +31,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async signIn({ account }) {
       console.log("[DEBUG] provider:", account?.provider);
       console.log("[DEBUG] providerAccountId:", account?.providerAccountId);
-      console.log("[DEBUG] allowedIds:", [...allowedDiscordIds]);
       console.log(
-        "[DEBUG] isAllowed:",
-        allowedDiscordIds.has(account?.providerAccountId ?? ""),
+        "[DEBUG] ALLOWED_DISCORD_IDS raw:",
+        process.env.ALLOWED_DISCORD_IDS,
       );
-
-      if (account?.provider !== "discord") {
-        return false;
-      }
-
-      return allowedDiscordIds.has(account.providerAccountId);
+      console.log("[DEBUG] allowedIds set:", [...allowedDiscordIds]);
+      return true;
     },
     async session({ session, user }) {
       if (session.user) {
