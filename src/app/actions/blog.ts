@@ -4,7 +4,7 @@ import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 import { db } from "@/db";
-import { posts, profiles, series } from "@/db/schema";
+import { posts, series } from "@/db/schema";
 import {
   assertValidBlogSlug,
   assertValidSeriesSlug,
@@ -98,32 +98,20 @@ function normalizePublishedAt(value?: Date | null) {
   return value;
 }
 
-async function resolveSessionUsername(userId: string) {
-  const [profile] = await db
-    .select({
-      username: profiles.username,
-    })
-    .from(profiles)
-    .where(eq(profiles.userId, userId))
-    .limit(1);
-
-  return profile?.username ?? (await getOwnerBlogUsername());
-}
-
-async function revalidateBlogPaths(userId: string) {
+async function revalidateBlogPaths() {
   revalidatePath("/dashboard/blog");
   revalidatePath("/dashboard/blog/new");
   revalidatePath("/dashboard/series");
 
-  const username = await resolveSessionUsername(userId);
+  const username = await getOwnerBlogUsername();
 
   if (username) {
-    revalidatePath(`/${username}/blog`);
+    revalidatePath(`/${username}/blog`, "layout");
   }
 }
 
 export async function createPost(data: CreatePostInput): Promise<{ id: string }> {
-  const { userId } = await requireOwner();
+  await requireOwner();
 
   const [created] = await db
     .insert(posts)
@@ -137,13 +125,13 @@ export async function createPost(data: CreatePostInput): Promise<{ id: string }>
     })
     .returning({ id: posts.id });
 
-  await revalidateBlogPaths(userId);
+  await revalidateBlogPaths();
 
   return created;
 }
 
 export async function updatePost(id: string, data: UpdatePostInput): Promise<void> {
-  const { userId } = await requireOwner();
+  await requireOwner();
 
   const nextData: {
     body?: string;
@@ -182,20 +170,20 @@ export async function updatePost(id: string, data: UpdatePostInput): Promise<voi
   }
 
   await db.update(posts).set(nextData).where(eq(posts.id, id));
-  await revalidateBlogPaths(userId);
+  await revalidateBlogPaths();
 }
 
 export async function deletePost(id: string): Promise<void> {
-  const { userId } = await requireOwner();
+  await requireOwner();
 
   await db.delete(posts).where(eq(posts.id, id));
-  await revalidateBlogPaths(userId);
+  await revalidateBlogPaths();
 }
 
 export async function createSeries(
   data: CreateSeriesInput,
 ): Promise<{ id: string }> {
-  const { userId } = await requireOwner();
+  await requireOwner();
 
   const [created] = await db
     .insert(series)
@@ -207,7 +195,7 @@ export async function createSeries(
     })
     .returning({ id: series.id });
 
-  await revalidateBlogPaths(userId);
+  await revalidateBlogPaths();
 
   return created;
 }
@@ -216,7 +204,7 @@ export async function updateSeries(
   id: string,
   data: UpdateSeriesInput,
 ): Promise<void> {
-  const { userId } = await requireOwner();
+  await requireOwner();
 
   const nextData: {
     coverImageUrl?: string | null;
@@ -246,12 +234,12 @@ export async function updateSeries(
   }
 
   await db.update(series).set(nextData).where(eq(series.id, id));
-  await revalidateBlogPaths(userId);
+  await revalidateBlogPaths();
 }
 
 export async function deleteSeries(id: string): Promise<void> {
-  const { userId } = await requireOwner();
+  await requireOwner();
 
   await db.delete(series).where(eq(series.id, id));
-  await revalidateBlogPaths(userId);
+  await revalidateBlogPaths();
 }
