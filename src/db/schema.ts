@@ -81,3 +81,29 @@ export const profiles = pgTable("profiles", {
 });
 
 export type Profile = typeof profiles.$inferSelect;
+
+export const series = pgTable("series", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  slug: text("slug").unique().notNull(),
+  title: text("title").notNull(),
+  description: text("description"),
+  coverImageUrl: text("cover_image_url"),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+});
+
+export const posts = pgTable("posts", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  slug: text("slug").unique().notNull(),
+  title: text("title").notNull(),
+  seriesId: uuid("series_id").references(() => series.id, {
+    onDelete: "set null",
+  }),
+  seriesOrder: integer("series_order"),
+  body: text("body").notNull().default(""),
+  publishedAt: timestamp("published_at", { mode: "date" }),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { mode: "date" }).defaultNow().notNull(),
+});
+
+export type Series = typeof series.$inferSelect;
+export type Post = typeof posts.$inferSelect;
