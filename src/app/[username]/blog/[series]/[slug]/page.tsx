@@ -75,7 +75,7 @@ export default async function SeriesPostPage({ params }: PageProps) {
       </header>
 
       <article
-        className="prose prose-invert max-w-none rounded-3xl border border-white/10 bg-[#10131e] px-6 py-6 prose-a:text-[#8ea1ff]"
+        className="markdown-content max-w-none rounded-3xl border border-white/10 bg-[#10131e] px-6 py-6"
         dangerouslySetInnerHTML={{ __html: html }}
       />
 
