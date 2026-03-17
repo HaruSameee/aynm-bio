@@ -3,7 +3,7 @@ import { and, count, desc, eq, isNull, lte } from "drizzle-orm";
 
 import { db } from "@/db";
 import { posts, series } from "@/db/schema";
-import { requireOwnerBlogUsername } from "@/lib/blog";
+import { formatBlogDate, requireOwnerBlogUsername } from "@/lib/blog";
 
 type PageProps = {
   params: Promise<{ username: string }>;
@@ -98,7 +98,7 @@ export default async function BlogIndexPage({ params }: PageProps) {
             >
               <div className="text-xl font-semibold text-white">{post.title}</div>
               <div className="mt-2 text-sm text-[#949ba4]">
-                {post.publishedAt?.toLocaleDateString() ?? "Draft"}
+                {formatBlogDate(post.publishedAt)}
               </div>
             </Link>
           ))}

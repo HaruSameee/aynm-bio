@@ -5,6 +5,7 @@ import { deletePost, deleteSeries } from "@/app/actions/blog";
 import { db } from "@/db";
 import { posts, series } from "@/db/schema";
 import { requireOwner } from "@/lib/auth-guard";
+import { formatBlogDateTime } from "@/lib/blog";
 
 export default async function DashboardBlogPage() {
   await requireOwner();
@@ -125,7 +126,7 @@ export default async function DashboardBlogPage() {
                 </div>
                 <div className="text-sm text-[#949ba4]">
                   {post.publishedAt
-                    ? `Published ${post.publishedAt.toLocaleString()}`
+                    ? `Published ${formatBlogDateTime(post.publishedAt)}`
                     : "Draft"}
                 </div>
               </div>

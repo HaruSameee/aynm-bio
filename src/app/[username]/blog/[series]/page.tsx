@@ -4,7 +4,11 @@ import { notFound } from "next/navigation";
 
 import { db } from "@/db";
 import { posts, series as seriesTable } from "@/db/schema";
-import { normalizeBlogSlug, requireOwnerBlogUsername } from "@/lib/blog";
+import {
+  formatBlogDate,
+  normalizeBlogSlug,
+  requireOwnerBlogUsername,
+} from "@/lib/blog";
 
 type PageProps = {
   params: Promise<{ username: string; series: string }>;
@@ -73,7 +77,7 @@ export default async function SeriesPage({ params }: PageProps) {
               {post.title}
             </div>
             <div className="mt-2 text-sm text-[#949ba4]">
-              {post.publishedAt?.toLocaleDateString() ?? "Draft"}
+              {formatBlogDate(post.publishedAt)}
             </div>
           </Link>
         ))}

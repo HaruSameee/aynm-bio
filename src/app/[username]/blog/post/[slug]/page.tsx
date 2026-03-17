@@ -4,7 +4,11 @@ import { notFound } from "next/navigation";
 
 import { db } from "@/db";
 import { posts } from "@/db/schema";
-import { normalizeBlogSlug, requireOwnerBlogUsername } from "@/lib/blog";
+import {
+  formatBlogDateTime,
+  normalizeBlogSlug,
+  requireOwnerBlogUsername,
+} from "@/lib/blog";
 import { renderMarkdown } from "@/lib/markdown";
 
 type PageProps = {
@@ -40,7 +44,7 @@ export default async function StandalonePostPage({ params }: PageProps) {
         </Link>
         <h1 className="text-4xl font-semibold text-white">{post.title}</h1>
         <div className="text-sm text-[#949ba4]">
-          {post.publishedAt?.toLocaleString()}
+          {formatBlogDateTime(post.publishedAt)}
         </div>
       </header>
 

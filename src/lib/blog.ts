@@ -7,6 +7,7 @@ import { OWNER_DISCORD_ID } from "@/lib/auth-guard";
 
 const BLOG_SLUG_REGEX = /^[a-z0-9_-]{3,32}$/;
 const RESERVED_SERIES_SLUGS = new Set(["post"]);
+const BLOG_TIME_ZONE = "Asia/Tokyo";
 
 export function normalizeBlogSlug(value: string) {
   return value.trim().toLowerCase();
@@ -62,13 +63,68 @@ export async function requireOwnerBlogUsername(username: string) {
   return ownerUsername;
 }
 
+function getBlogDateTimeParts(value: Date) {
+  const formatter = new Intl.DateTimeFormat("en-CA", {
+    timeZone: BLOG_TIME_ZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  });
+
+  const parts = formatter.formatToParts(value);
+
+  const get = (type: Intl.DateTimeFormatPartTypes) =>
+    parts.find((part) => part.type === type)?.value ?? "";
+
+  return {
+    year: get("year"),
+    month: get("month"),
+    day: get("day"),
+    hour: get("hour"),
+    minute: get("minute"),
+    second: get("second"),
+  };
+}
+
+export function formatBlogDate(value?: Date | null) {
+  if (!value) {
+    return "Draft";
+  }
+
+  return new Intl.DateTimeFormat("ja-JP", {
+    timeZone: BLOG_TIME_ZONE,
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+  }).format(value);
+}
+
+export function formatBlogDateTime(value?: Date | null) {
+  if (!value) {
+    return "Draft";
+  }
+
+  return new Intl.DateTimeFormat("ja-JP", {
+    timeZone: BLOG_TIME_ZONE,
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).format(value);
+}
+
 export function formatDateTimeLocalValue(value?: Date | null) {
   if (!value) {
     return "";
   }
 
-  const offset = value.getTimezoneOffset();
-  const local = new Date(value.getTime() - offset * 60_000);
+  const { year, month, day, hour, minute } = getBlogDateTimeParts(value);
 
-  return local.toISOString().slice(0, 16);
+  return `${year}-${month}-${day}T${hour}:${minute}`;
 }
