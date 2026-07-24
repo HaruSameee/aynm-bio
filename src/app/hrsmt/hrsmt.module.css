@@ -1,0 +1,534 @@
+@import url("https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap");
+
+/* ============================================================
+   /hrsmt ― ADV(ノベルゲー)仕立ての自己紹介
+   雰囲気: 夏の空・逆光・白飛び・淡い水彩
+   ルール: 見出し=明朝 / 本文=ゴシック / 純黒は不使用(inkの青寄りグレー)
+          アクセント=ピンク1色のみ / 角丸は2〜3px / 字間ひろめ
+   ============================================================ */
+
+.stage {
+  /* ── 配色トークン ─────────────────────────────── */
+  /* 文字（黒は使わない・青寄りグレーの3段階） */
+  --ink: #2a3b4d; /* 見出し・本文の基本色 */
+  --ink-soft: #5c7085; /* ラベル・副次テキスト */
+  --ink-faint: #9ab0bf; /* 罫線・プレースホルダ・最も淡い補助 */
+
+  /* アクセント（ピンク1色のみ。カーソル ▶ / ▼ / 区切りの一部だけ） */
+  --accent: #e9a0b4;
+  --accent-line: rgba(233, 160, 180, 0.55); /* ↑と同一色の淡い版 */
+
+  /* ウィンドウ地（半透明の白 + 白い縁） */
+  --paper: rgba(255, 253, 245, 0.82);
+  --paper-hi: rgba(255, 255, 255, 0.9); /* hover時などの明るい地 */
+  --paper-edge: rgba(255, 255, 255, 0.9); /* 1pxの白い縁 */
+
+  /* 影は黒を使わず ink 由来の色で打つ */
+  --shadow: rgba(42, 59, 77, 0.1);
+
+  /* 背景（夏の空・逆光・白飛び／後で1枚画像に差し替え） */
+  --sky-high: #eaf7ff; /* 空の上・白飛び側 */
+  --sky-mid: #c3e4f6; /* 中間の水色 */
+  --sky-low: #eaf4e7; /* 地面寄りの淡い緑 */
+  --glow: #fff8e6; /* 逆光のハイライト */
+
+  --radius: 3px; /* 角丸は2〜3pxまで */
+  --gutter: clamp(16px, 4vw, 40px);
+
+  position: relative;
+  z-index: 0; /* 背景(.bg z-index:-1)を内側に閉じ込める */
+  min-height: 100svh;
+  overflow-x: hidden; /* 横スクロール防止の保険 */
+  color: var(--ink);
+  font-family: "Zen Kaku Gothic New", "Hiragino Kaku Gothic ProN", "Yu Gothic",
+    sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.04em; /* 本文の字間 */
+  line-height: 1.9;
+  -webkit-font-smoothing: antialiased;
+}
+
+.stage *,
+.stage *::before,
+.stage *::after {
+  box-sizing: border-box;
+}
+
+/* キーボードフォーカスは必ず見える状態を保つ（アクセントではなくinkで） */
+.stage :focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+/* ── 背景 ─────────────────────────────────────────
+   ▼▼▼ 背景を担当する唯一の要素 ▼▼▼
+   1枚画像に差し替えるときは、この .bg の background を
+     background: url("/hrsmt/sky.jpg") center / cover no-repeat;
+   に置き換える。動きが不要なら animation: none; も付ける。
+   ─────────────────────────────────────────────── */
+.bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 90% at 78% 6%, var(--glow) 0%, transparent 42%),
+    radial-gradient(140% 120% at 50% 118%, var(--sky-low) 0%, transparent 55%),
+    linear-gradient(
+      180deg,
+      var(--sky-high) 0%,
+      var(--sky-mid) 58%,
+      var(--sky-low) 100%
+    );
+  background-size:
+    130% 130%,
+    130% 130%,
+    100% 100%;
+  background-position:
+    0% 0%,
+    0% 100%,
+    0 0;
+  /* 光のゆっくりした移動（許可された4つの動きのひとつ） */
+  animation: bgDrift 34s ease-in-out infinite alternate;
+}
+
+@keyframes bgDrift {
+  from {
+    background-position:
+      12% 0%,
+      0% 100%,
+      0 0;
+  }
+  to {
+    background-position:
+      86% 8%,
+      22% 90%,
+      0 0;
+  }
+}
+
+/* ── 1. ファーストビュー ───────────────────────── */
+.fv {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 24px;
+  padding: var(--gutter) var(--gutter) clamp(20px, 5vh, 48px);
+}
+
+/* タイトルロゴ（右上・明朝・字間ひろめ） */
+.logo {
+  align-self: flex-end;
+  margin: 0;
+  text-align: right;
+  font-family: "Shippori Mincho", "Yu Mincho", serif;
+  font-weight: 700;
+  color: var(--ink);
+  text-shadow: 0 1px 16px rgba(255, 255, 255, 0.55); /* 白飛びのにじみ */
+}
+
+.logoEn {
+  display: block;
+  margin-bottom: 0.55em;
+  padding-left: 0.5em; /* letter-spacingの右寄り補正 */
+  font-weight: 600;
+  font-size: clamp(0.7rem, 2.4vw, 0.9rem);
+  letter-spacing: 0.5em;
+  color: var(--ink-soft);
+}
+
+.logoJa {
+  display: block;
+  font-size: clamp(2.1rem, 8vw, 4.2rem);
+  letter-spacing: 0.18em;
+  line-height: 1.12;
+}
+
+/* 選択肢メニュー + メッセージウィンドウの下部クラスタ */
+.bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: min(680px, 100%);
+}
+
+/* 選択肢メニュー（縦積みのリンク） */
+.choices {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.choice {
+  position: relative;
+  display: inline-block;
+  padding: 6px 16px 6px 30px;
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  background: var(--paper);
+  border: 1px solid var(--paper-edge);
+  border-radius: var(--radius);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition:
+    transform 0.18s ease,
+    background-color 0.18s ease;
+}
+
+/* hoverで ▶ カーソルが出る（アクセント色） */
+.choice::before {
+  content: "▶";
+  position: absolute;
+  left: 13px;
+  color: var(--accent);
+  font-size: 0.8em;
+  opacity: 0;
+  transform: translateX(-4px);
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
+}
+
+.choice:hover,
+.choice:focus-visible {
+  transform: translateX(6px); /* 数px右にスライド */
+  background: var(--paper-hi);
+}
+
+.choice:hover::before,
+.choice:focus-visible::before {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ADVメッセージウィンドウ */
+.msgWin {
+  position: relative;
+  margin-top: 8px; /* 名前ボックスが上に被さる余白 */
+  padding: 26px clamp(18px, 4vw, 30px) 30px;
+  min-height: 132px;
+  background: var(--paper);
+  border: 1px solid var(--paper-edge);
+  border-radius: var(--radius);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  box-shadow: 0 10px 30px var(--shadow);
+}
+
+/* 名前ボックス（左上に被さる） */
+.nameBox {
+  position: absolute;
+  top: -15px;
+  left: 18px;
+  padding: 5px 22px;
+  background: var(--paper);
+  border: 1px solid var(--paper-edge);
+  border-radius: var(--radius);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  box-shadow: 0 6px 16px var(--shadow);
+  font-family: "Shippori Mincho", serif; /* 名前は見出し扱い＝明朝 */
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  color: var(--ink);
+}
+
+.msgBody {
+  margin: 0;
+  min-height: 3.9em; /* タイプ中に高さが暴れないよう確保 */
+  letter-spacing: 0.04em;
+  line-height: 2;
+  color: var(--ink);
+}
+
+/* 右下に点滅する ▼ */
+.next {
+  position: absolute;
+  right: 16px;
+  bottom: 12px;
+  color: var(--accent);
+  font-size: 0.9rem;
+  animation: blink 1.1s steps(1) infinite;
+}
+
+@keyframes blink {
+  0%,
+  55% {
+    opacity: 1;
+  }
+  56%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* 画面読み上げ用（見た目には出さない） */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── セクション共通 ───────────────────────────── */
+.section {
+  position: relative;
+  width: min(920px, 100%);
+  margin: 0 auto;
+  padding: clamp(28px, 6vh, 64px) var(--gutter);
+}
+
+.h2 {
+  margin: 0 0 22px;
+  font-family: "Shippori Mincho", serif; /* 見出しは明朝 */
+  font-weight: 700;
+  font-size: clamp(1.15rem, 3.4vw, 1.6rem);
+  letter-spacing: 0.3em; /* ラベル/見出しの字間 */
+  color: var(--ink);
+}
+
+.h2 small {
+  display: block;
+  margin-top: 5px;
+  font-family: "Zen Kaku Gothic New", sans-serif; /* 英字サブラベルはゴシック */
+  font-weight: 500;
+  font-size: 0.62rem;
+  letter-spacing: 0.32em;
+  color: var(--ink-soft);
+}
+
+/* ── 2. ステータス画面 ───────────────────────── */
+.statusGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
+  gap: clamp(20px, 4vw, 40px);
+  align-items: start;
+  padding: clamp(18px, 3vw, 28px);
+  background: var(--paper);
+  border: 1px solid var(--paper-edge);
+  border-radius: var(--radius);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  box-shadow: 0 10px 30px var(--shadow);
+}
+
+/* 立ち絵の差し替え枠（aspect-ratio 3/4・画像なしでも崩れない） */
+.tachie {
+  aspect-ratio: 3 / 4;
+  width: 100%;
+  display: grid;
+  place-items: center;
+  border: 1px dashed var(--ink-faint);
+  border-radius: var(--radius);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.5),
+    rgba(255, 255, 255, 0.12)
+  );
+}
+
+/* 画像を入れるとき用（<img className={styles.tachieImg}/>） */
+.tachieImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radius);
+}
+
+.tachieCap {
+  color: var(--ink-soft);
+  font-size: 0.72rem;
+  letter-spacing: 0.28em;
+}
+
+.deflist {
+  margin: 0;
+}
+
+.defRow {
+  display: grid;
+  grid-template-columns: minmax(96px, 30%) 1fr;
+  gap: 6px 16px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(154, 176, 191, 0.35);
+}
+
+.defRow:last-child {
+  border-bottom: 0;
+}
+
+.defRow dt {
+  color: var(--ink-soft);
+  font-size: 0.72rem;
+  letter-spacing: 0.24em; /* ラベルは字間ひろめ */
+}
+
+.defRow dd {
+  margin: 0;
+  color: var(--ink);
+  letter-spacing: 0.06em;
+}
+
+/* パラメータバー（ラベル / バー / 数値の3カラム） */
+.params {
+  margin-top: clamp(16px, 3vw, 24px);
+  padding: clamp(16px, 3vw, 24px);
+  display: grid;
+  gap: 12px;
+  background: var(--paper);
+  border: 1px solid var(--paper-edge);
+  border-radius: var(--radius);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  box-shadow: 0 10px 30px var(--shadow);
+}
+
+.paramRow {
+  display: grid;
+  grid-template-columns: minmax(88px, 150px) 1fr minmax(36px, auto);
+  align-items: center;
+  gap: 14px;
+}
+
+.paramLabel {
+  color: var(--ink-soft);
+  font-size: 0.7rem;
+  letter-spacing: 0.24em;
+}
+
+.paramTrack {
+  height: 8px;
+  border-radius: 2px;
+  background: rgba(154, 176, 191, 0.28);
+  overflow: hidden;
+}
+
+/* バーの塗りはアクセントを使わない。青系(空)で濁らせない */
+.paramFill {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--sky-mid), var(--ink-soft));
+}
+
+.paramVal {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+}
+
+/* ── 3. バックログ ───────────────────────────── */
+.logList {
+  list-style: none;
+  margin: 0;
+  padding: clamp(10px, 2vw, 18px) clamp(16px, 3vw, 26px);
+  background: var(--paper);
+  border: 1px solid var(--paper-edge);
+  border-radius: var(--radius);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  box-shadow: 0 10px 30px var(--shadow);
+}
+
+.logRow {
+  display: grid;
+  grid-template-columns: minmax(84px, auto) 1fr;
+  gap: 8px 20px;
+  align-items: baseline;
+  padding: 12px 2px;
+  border-bottom: 1px dashed var(--accent-line); /* 区切りの一部にアクセント */
+}
+
+.logRow:last-child {
+  border-bottom: 0;
+}
+
+.logDate {
+  color: var(--ink-soft);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  font-variant-numeric: tabular-nums;
+}
+
+.logText {
+  color: var(--ink);
+  letter-spacing: 0.05em;
+}
+
+/* ── レスポンシブ：720px以下で1カラム ─────────── */
+@media (max-width: 720px) {
+  .logoEn {
+    letter-spacing: 0.34em;
+  }
+
+  .logoJa {
+    letter-spacing: 0.1em;
+  }
+
+  .statusGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .tachie {
+    max-width: 260px;
+    margin: 0 auto;
+  }
+
+  .paramRow {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "label value"
+      "bar   bar";
+    gap: 6px 12px;
+  }
+
+  .paramLabel {
+    grid-area: label;
+  }
+
+  .paramVal {
+    grid-area: value;
+  }
+
+  .paramTrack {
+    grid-area: bar;
+  }
+
+  .logRow {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+}
+
+/* ── prefers-reduced-motion：自動で動くものは全停止 ─
+   （タイプライターはJS側で即時全文表示にしている） */
+@media (prefers-reduced-motion: reduce) {
+  .bg {
+    animation: none;
+  }
+
+  .next {
+    animation: none;
+    opacity: 1;
+  }
+
+  .choice,
+  .choice::before {
+    transition: none;
+  }
+}

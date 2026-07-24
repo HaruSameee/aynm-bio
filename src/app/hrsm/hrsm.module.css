@@ -1,0 +1,332 @@
+/* 昔の秋葉原 = レトロPC(Win98/PC-98) × 2000年代個人サイト */
+
+.stage {
+  min-height: 100svh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: clamp(12px, 4vw, 48px) 12px 48px;
+  background:
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.12) 0 1px, transparent 1px 4px),
+    #008080;
+  color: #000;
+  font-family: "DotGothic16", "MS Gothic", "ＭＳ ゴシック", "Hiragino Kaku Gothic ProN", monospace;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* ---- Win98風ウィンドウ ---- */
+
+.window {
+  width: min(720px, 100%);
+  border: 2px outset #dfdfdf;
+  background: #c0c0c0;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.4);
+  padding: 2px;
+}
+
+.titleBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: linear-gradient(90deg, #000080, #1084d0);
+  color: #fff;
+  padding: 3px 4px 3px 8px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.titleBarText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.winButtons {
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 2px;
+}
+
+.winBtn {
+  display: inline-flex;
+  width: 18px;
+  height: 16px;
+  align-items: center;
+  justify-content: center;
+  border: 1px outset #dfdfdf;
+  background: #c0c0c0;
+  color: #000;
+  font-size: 11px;
+  line-height: 1;
+}
+
+.windowBody {
+  margin: 2px;
+  border: 2px inset #dfdfdf;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 23px, rgba(0, 0, 128, 0.05) 23px 24px),
+    #ffffef;
+  padding: 0 14px 14px;
+}
+
+/* ---- マーキー ---- */
+
+.marquee {
+  overflow: hidden;
+  margin: 0 -14px;
+  border-bottom: 1px dashed #f0f;
+  background: #000080;
+  color: #ff0;
+  white-space: nowrap;
+}
+
+.marqueeTrack {
+  display: inline-flex;
+  width: max-content;
+  padding: 4px 0;
+  font-weight: 900;
+  animation: marquee 20s linear infinite;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ---- ヘッダー ---- */
+
+.header {
+  padding-top: 16px;
+  text-align: center;
+}
+
+.headerKaomoji {
+  margin: 0;
+  color: #f0f;
+  font-size: 1.2rem;
+}
+
+.title {
+  margin: 6px 0 0;
+  color: #000080;
+  font-size: clamp(2.6rem, 9vw, 4.4rem);
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-shadow:
+    2px 2px 0 #f0f,
+    4px 4px 0 #0ff;
+}
+
+.blink {
+  color: #f0f;
+  animation: blink 1s steps(2) infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.titleSub {
+  margin: 4px 0 0;
+  color: #c000c0;
+  font-weight: 900;
+  letter-spacing: 0.3em;
+}
+
+.headerNote {
+  margin: 8px 0 0;
+  color: #666;
+  font-size: 0.75rem;
+}
+
+/* ---- 虹色の区切り線 ---- */
+
+.rainbowBar {
+  height: 6px;
+  margin: 16px 0;
+  border: 1px outset #dfdfdf;
+  background: linear-gradient(
+    90deg,
+    #f00,
+    #ff8000,
+    #ff0,
+    #0f0,
+    #00f,
+    #4b0082,
+    #9400d3
+  );
+}
+
+/* ---- セクション見出し ---- */
+
+.sectionTitle {
+  margin: 0 0 10px;
+  color: #000080;
+  font-size: 1.05rem;
+  font-weight: 900;
+}
+
+/* ---- プロフ帳テーブル ---- */
+
+.profTable {
+  margin: 0;
+  border: 2px inset #dfdfdf;
+  background: #fff;
+}
+
+.profRow {
+  display: grid;
+  grid-template-columns: 130px minmax(0, 1fr);
+}
+
+.profRow + .profRow {
+  border-top: 1px dotted #999;
+}
+
+.profRow dt {
+  border-right: 1px dotted #999;
+  background: #e0e0ff;
+  color: #000080;
+  font-weight: 900;
+  padding: 6px 10px;
+}
+
+.profRow dd {
+  margin: 0;
+  color: #c00080;
+  font-weight: 900;
+  padding: 6px 10px;
+}
+
+/* ---- 電波ログ(ターミナル) ---- */
+
+.terminal {
+  border: 2px inset #dfdfdf;
+  background: #000;
+  padding: 10px 12px;
+}
+
+.termLine {
+  margin: 0;
+  color: #33ff33;
+  font-size: 0.85rem;
+  line-height: 1.9;
+}
+
+.termCursor {
+  animation: blink 0.8s steps(2) infinite;
+}
+
+/* ---- ひとこと ---- */
+
+.bio {
+  margin: 16px 0 0;
+  border: 1px dashed #f0f;
+  background: #fff0ff;
+  color: #800080;
+  padding: 8px 12px;
+}
+
+/* ---- リンク(Win95風ボタン) ---- */
+
+.linkGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.linkBtn {
+  display: flex;
+  min-height: 54px;
+  flex-direction: column;
+  justify-content: center;
+  border: 2px outset #dfdfdf;
+  background: #c0c0c0;
+  color: #000;
+  padding: 6px 12px;
+  text-decoration: none;
+}
+
+.linkBtn span {
+  color: #000080;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.linkBtn strong {
+  color: #c00080;
+  font-size: 0.9rem;
+  font-weight: 900;
+}
+
+.linkBtn:hover,
+.linkBtn:focus-visible {
+  outline: 1px dotted #000;
+  outline-offset: -4px;
+}
+
+.linkBtn:active {
+  border-style: inset;
+}
+
+/* ---- フッター ---- */
+
+.footer {
+  margin-top: 16px;
+  border-top: 2px groove #dfdfdf;
+  padding-top: 10px;
+  color: #444;
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.footer p {
+  margin: 2px 0;
+}
+
+.counterNum {
+  border: 1px inset #dfdfdf;
+  background: #000;
+  color: #33ff33;
+  padding: 1px 6px;
+  font-weight: 900;
+  letter-spacing: 0.2em;
+}
+
+.licenseLink {
+  color: #0000cc;
+}
+
+.licenseLink:visited {
+  color: #800080;
+}
+
+/* ---- レスポンシブ ---- */
+
+@media (max-width: 560px) {
+  .profRow {
+    grid-template-columns: 100px minmax(0, 1fr);
+  }
+
+  .linkGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- reduced motion ---- */
+
+@media (prefers-reduced-motion: reduce) {
+  .marqueeTrack,
+  .blink,
+  .termCursor {
+    animation: none;
+  }
+}

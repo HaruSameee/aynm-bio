@@ -1,0 +1,138 @@
+.licenseStage {
+  min-height: 100svh;
+  background:
+    linear-gradient(120deg, rgba(180, 216, 0, 0.13), transparent 32%),
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0 1px, transparent 1px 13px),
+    #050609;
+  color: #f8fafc;
+}
+
+.licenseShell {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 24px 0 56px;
+}
+
+.licenseHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.licenseHeader p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 0.9rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.licenseButton {
+  display: inline-flex;
+  min-height: 46px;
+  min-width: 178px;
+  align-items: center;
+  justify-content: center;
+  transform: skewX(-11deg);
+  border: 3px solid #070707;
+  border-radius: 24px 8px 24px 8px;
+  background: rgba(13, 13, 13, 0.76);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.24) inset, 0 4px 0 rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: 900;
+  padding: 0 26px;
+  text-decoration: none;
+}
+
+.licenseButton:hover,
+.licenseButton:focus-visible {
+  outline: 3px solid #b4d800;
+  outline-offset: 3px;
+}
+
+.licensePanel {
+  margin-top: 52px;
+  border: 4px solid #070707;
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(48, 48, 48, 0.94), rgba(14, 14, 14, 0.96)),
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 7px);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.14) inset, 0 22px 34px rgba(0, 0, 0, 0.5);
+  padding: clamp(22px, 4vw, 44px);
+}
+
+.panelEyebrow {
+  margin: 0;
+  color: #b4d800;
+  font-weight: 900;
+}
+
+.licensePanel h1 {
+  margin: 12px 0 0;
+  font-size: clamp(3rem, 8vw, 6.5rem);
+  font-weight: 900;
+  line-height: 0.9;
+}
+
+.licenseLead {
+  max-width: 780px;
+  margin: 24px 0 0;
+  color: #d9dee7;
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+.creditGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 34px;
+}
+
+.creditSection {
+  border: 3px solid #050505;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.62);
+  padding: 18px;
+}
+
+.creditSection h2 {
+  margin: 0 0 16px;
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 900;
+}
+
+.creditSection dl,
+.creditSection div {
+  margin: 0;
+}
+
+.creditSection div + div {
+  margin-top: 10px;
+}
+
+.creditSection dt {
+  color: #b4d800;
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+.creditSection dd {
+  margin: 4px 0 0;
+  color: #f8fafc;
+  line-height: 1.55;
+}
+
+@media (max-width: 820px) {
+  .licenseHeader {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .creditGrid {
+    grid-template-columns: 1fr;
+  }
+}
