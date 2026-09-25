@@ -1,0 +1,277 @@
+/* 記事画面：ADVのメッセージ枠 × 通常の読みやすい本文 */
+
+.article {
+  padding: clamp(20px, 4vw, 32px) clamp(16px, 4vw, 36px) clamp(24px, 4vw, 36px);
+}
+
+.header {
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: var(--hrsm-rule);
+}
+
+.episodeLabel {
+  display: inline-block;
+  margin: 0;
+  padding: 0 10px;
+  border: 1px solid var(--hrsm-tab-border);
+  border-radius: var(--hrsm-radius);
+  background: var(--hrsm-tab-bg);
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-shadow: var(--hrsm-outline-thin);
+}
+
+.title {
+  margin: 8px 0 4px;
+  color: var(--hrsm-ink);
+  font-family: var(--hrsm-font-heading);
+  font-size: clamp(1.45rem, 5.2vw, 1.9rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  text-shadow: var(--hrsm-text-drop);
+}
+
+.date {
+  color: var(--hrsm-ink-soft);
+  font-size: 0.85rem;
+}
+
+/* ── 本文（Markdown） ─────────────────────────────── */
+.body {
+  font-size: 1rem;
+  line-height: 1.95;
+  letter-spacing: 0.02em;
+  overflow-wrap: anywhere;
+}
+
+.body > :first-child {
+  margin-top: 0;
+}
+
+.body :global(:is(p, ul, ol, blockquote, pre, table, figure)) {
+  margin: 1.2em 0 0;
+}
+
+.body :global(:is(blockquote, li) > :first-child) {
+  margin-top: 0;
+}
+
+.body :global(:is(h1, h2, h3, h4)) {
+  margin: 2em 0 0;
+  font-family: var(--hrsm-font-heading);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+}
+
+.body :global(h1),
+.body :global(h2) {
+  padding: 0.25em 0.6em;
+  border-left: 6px solid var(--hrsm-teal);
+  border-bottom: var(--hrsm-rule);
+  background: linear-gradient(90deg, var(--hrsm-sky-light) 0%, rgba(189, 239, 255, 0) 100%);
+  font-size: 1.35rem;
+  text-shadow: 0 1px 0 #fff;
+}
+
+.body :global(h3) {
+  padding-bottom: 0.2em;
+  border-bottom: var(--hrsm-rule);
+  font-size: 1.18rem;
+}
+
+.body :global(h3)::before {
+  content: var(--hrsm-bullet);
+  margin-right: 0.3em;
+  color: var(--hrsm-bullet-color);
+  font-size: 0.8em;
+}
+
+.body :global(h4) {
+  font-size: 1.05rem;
+}
+
+.body :global(:is(ul, ol)) {
+  padding-left: 1.5em;
+}
+
+/* 箇条書きの行頭は ● */
+.body :global(ul) {
+  list-style: none;
+  padding-left: 1.3em;
+}
+
+.body :global(ul > li) {
+  position: relative;
+}
+
+.body :global(ul > li)::before {
+  content: var(--hrsm-bullet);
+  position: absolute;
+  left: -1.3em;
+  color: var(--hrsm-bullet-color);
+  font-size: 0.8em;
+  line-height: calc(1.95em / 0.8);
+}
+
+.body :global(ol) {
+  list-style: decimal;
+}
+
+.body :global(li + li) {
+  margin-top: 0.3em;
+}
+
+.body :global(a) {
+  color: var(--hrsm-link);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.body :global(a:hover) {
+  color: var(--hrsm-link-hover);
+}
+
+/* 強調は赤の太字 */
+.body :global(strong) {
+  color: var(--hrsm-strong);
+  font-weight: 700;
+}
+
+.body :global(blockquote) {
+  padding: 0.6em 1em;
+  border: 1px dotted var(--hrsm-box-border);
+  border-left: 4px solid var(--hrsm-cyan);
+  border-radius: 0 var(--hrsm-radius) var(--hrsm-radius) 0;
+  background: #f0faff;
+  color: var(--hrsm-ink-soft);
+}
+
+.body :global(img) {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--hrsm-radius);
+}
+
+.body :global(hr) {
+  margin: 2.4em 0;
+  border: 0;
+  border-top: var(--hrsm-rule);
+}
+
+.body :global(table) {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.body :global(:is(th, td)) {
+  padding: 0.4em 0.8em;
+  border: 1px solid var(--hrsm-box-border);
+  text-align: left;
+}
+
+.body :global(th) {
+  background: var(--hrsm-nav-bg);
+  color: var(--hrsm-teal-dark);
+}
+
+/* インラインコード */
+.body :global(code) {
+  padding: 0.1em 0.4em;
+  border-radius: var(--hrsm-radius);
+  background: var(--hrsm-code-inline-bg);
+  color: var(--hrsm-code-inline-ink);
+  font-family: var(--hrsm-font-mono);
+  font-size: 0.88em;
+  letter-spacing: 0;
+  overflow-wrap: break-word;
+}
+
+/* コードブロック：折り返さず横スクロール、等幅・字間ゼロ・十分な行間 */
+.body :global(pre) {
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 1em 1.2em;
+  border-radius: var(--hrsm-radius-lg);
+  background: var(--hrsm-code-bg);
+  color: var(--hrsm-code-ink);
+  line-height: 1.7;
+  tab-size: 2;
+  -webkit-overflow-scrolling: touch;
+}
+
+.body :global(pre code) {
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 0.875rem;
+  white-space: pre;
+  overflow-wrap: normal;
+}
+
+/* ── 前後の話 ─────────────────────────────────────── */
+.pager {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.pagerLink {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 64px;
+  padding: 10px 16px;
+  overflow: hidden;
+  border: 1px solid var(--hrsm-box-border);
+  border-radius: var(--hrsm-box-radius);
+  background: linear-gradient(180deg, #ffffff 0%, #eefaff 50%, #d9f3ff 51%, #c4ecfd 100%);
+  box-shadow: 0 2px 4px rgba(0, 60, 100, 0.25), inset 0 1px 0 #ffffff;
+  color: var(--hrsm-link);
+  text-decoration: none;
+  transition: box-shadow var(--hrsm-duration) var(--hrsm-ease);
+}
+
+.pagerLink:hover {
+  box-shadow: 0 2px 4px rgba(0, 60, 100, 0.25), var(--hrsm-button-glow);
+}
+
+.pagerNext {
+  grid-column: 2;
+  text-align: right;
+}
+
+.pagerDir {
+  color: var(--hrsm-teal);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.pagerTitle {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+@media (max-width: 560px) {
+  .pager {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pagerNext {
+    grid-column: auto;
+  }
+}

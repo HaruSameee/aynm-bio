@@ -1,0 +1,168 @@
+/* ============================================================
+   /hrsm ― 2008〜2010年ごろのPCノベルゲーム＆公式サイト風
+   デザイントークン。配色・フォント・質感はこのファイルの
+   .root 内の変数だけを書き換えれば全画面に反映される。
+   ============================================================ */
+
+.root {
+  /* ── フォント ─────────────────────────────────────────
+     --hrsm-font-src-* は _lib/fonts.ts（next/font）が定義する */
+  --hrsm-font-body: var(--hrsm-font-src-body), "Hiragino Maru Gothic ProN",
+    "HG丸ｺﾞｼｯｸM-PRO", "Kosugi Maru", "Yu Gothic", "Meiryo", sans-serif;
+  --hrsm-font-heading: var(--hrsm-font-src-heading), "Hiragino Mincho ProN",
+    "Yu Mincho", "MS PMincho", serif;
+  --hrsm-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", monospace;
+
+  /* ── 基本色 ───────────────────────────────────────────── */
+  --hrsm-ink: #173a52; /* 本文（濃い紺） */
+  --hrsm-ink-soft: #3f6a85; /* 補助テキスト */
+  --hrsm-ink-faint: #8ab8d2; /* 最も淡い補助・罫線 */
+  --hrsm-ink-inverse: #ffffff;
+
+  --hrsm-sky-deep: #1b8fe6; /* 彩度高めの空色（上空） */
+  --hrsm-sky: #43c6f5; /* 空色〜シアン */
+  --hrsm-sky-light: #bdefff; /* 地平線近くの明るい空 */
+  --hrsm-cyan: #00c8e6;
+  --hrsm-teal: #00808f; /* 差し色：濃いティール */
+  --hrsm-teal-dark: #00525c;
+  --hrsm-glow: #fffbe2; /* 太陽・光 */
+
+  /* ── 文字の縁取り・影（text-shadow の重ねがけ） ─────────── */
+  --hrsm-outline-teal: 2px 0 0 var(--hrsm-teal-dark), -2px 0 0 var(--hrsm-teal-dark),
+    0 2px 0 var(--hrsm-teal-dark), 0 -2px 0 var(--hrsm-teal-dark),
+    1.5px 1.5px 0 var(--hrsm-teal-dark), -1.5px 1.5px 0 var(--hrsm-teal-dark),
+    1.5px -1.5px 0 var(--hrsm-teal-dark), -1.5px -1.5px 0 var(--hrsm-teal-dark),
+    3px 4px 4px rgba(0, 30, 50, 0.45);
+  --hrsm-outline-thin: 1px 0 0 var(--hrsm-teal-dark), -1px 0 0 var(--hrsm-teal-dark),
+    0 1px 0 var(--hrsm-teal-dark), 0 -1px 0 var(--hrsm-teal-dark),
+    1px 2px 2px rgba(0, 30, 50, 0.4);
+  --hrsm-outline-white: 2px 0 0 #fff, -2px 0 0 #fff, 0 2px 0 #fff, 0 -2px 0 #fff,
+    1.5px 1.5px 0 #fff, -1.5px 1.5px 0 #fff, 1.5px -1.5px 0 #fff,
+    -1.5px -1.5px 0 #fff, 2px 3px 4px rgba(0, 40, 70, 0.35);
+  --hrsm-text-drop: 1px 1px 0 #fff, 2px 2px 3px rgba(0, 40, 70, 0.3);
+
+  /* ── タイトル画面 ─────────────────────────────────────── */
+  --hrsm-game-width: 800px; /* 4:3 = 800×600 基準 */
+  --hrsm-game-ratio: 4 / 3;
+  --hrsm-outer-bg: radial-gradient(ellipse at center, #1a2c3a 0%, #070d13 75%);
+  --hrsm-game-frame: #0a141c;
+  /* 背景の1枚絵。差し替えるときは none を url("/hrsm/...") に。
+     CSSの雲が絵に重なって邪魔なら --hrsm-scene-clouds を none にする */
+  --hrsm-bg-image: none;
+  --hrsm-scene-clouds: block;
+  --hrsm-cloud: rgba(255, 255, 255, 0.96);
+  --hrsm-cloud-shade: rgba(214, 238, 252, 0.95);
+  --hrsm-plate-bg: rgba(255, 255, 255, 0.55);
+  --hrsm-plate-border: rgba(255, 255, 255, 0.95);
+
+  /* ── ボタン（半透明ティール＋光沢） ───────────────────── */
+  --hrsm-button-bg: linear-gradient(180deg, rgba(0, 170, 190, 0.82) 0%,
+      rgba(0, 110, 126, 0.86) 55%, rgba(0, 78, 90, 0.9) 100%);
+  --hrsm-button-gloss: linear-gradient(180deg, rgba(255, 255, 255, 0.6) 0%,
+      rgba(255, 255, 255, 0.14) 48%, transparent 50%);
+  --hrsm-button-border: rgba(255, 255, 255, 0.85);
+  --hrsm-button-shadow: 0 3px 6px rgba(0, 30, 45, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7), inset 0 -2px 3px rgba(0, 40, 50, 0.4);
+  --hrsm-button-glow: 0 0 8px rgba(160, 250, 255, 0.95), 0 0 20px rgba(0, 210, 245, 0.75);
+
+  /* ── サブページ（公式サイト風） ───────────────────────── */
+  --hrsm-site-width: 800px;
+  --hrsm-stripe-a: #eaf8ff;
+  --hrsm-stripe-b: #d3efff;
+  --hrsm-box-bg: #ffffff;
+  --hrsm-box-border: #62bfe6;
+  --hrsm-box-radius: 8px;
+  --hrsm-box-shadow: 0 3px 6px rgba(0, 60, 100, 0.25), inset 0 0 0 3px #f1fbff;
+  --hrsm-tab-bg: linear-gradient(180deg, #52dcf2 0%, #0cb2d2 48%, #0096b4 52%, #00788a 100%);
+  --hrsm-tab-border: #00606e;
+  --hrsm-tab-ink: #ffffff;
+  --hrsm-banner-bg: linear-gradient(180deg, #1b8fe6 0%, #43c6f5 55%, #bdefff 100%);
+  --hrsm-nav-bg: linear-gradient(180deg, #e9fbff 0%, #b5ecfb 49%, #86dcf3 51%, #5ccbea 100%);
+  --hrsm-nav-current-bg: linear-gradient(180deg, #2ab9d4 0%, #00889d 50%, #006c7c 100%);
+  --hrsm-rule: 1px dotted #6fb4d6; /* 区切りは点線 */
+  --hrsm-bullet: "●";
+  --hrsm-bullet-color: #1fb3e0;
+  --hrsm-link: #0a47c9;
+  --hrsm-link-hover: #e0106a;
+  --hrsm-strong: #d8001c;
+
+  /* ── バナー（シナリオの章・話） ───────────────────────── */
+  --hrsm-banner-card-bg: linear-gradient(90deg, #1b8fe6 0%, #43c6f5 26%, #c9f2ff 58%, #ffffff 100%);
+  --hrsm-banner-card-gloss: linear-gradient(180deg, rgba(255, 255, 255, 0.55) 0%,
+      rgba(255, 255, 255, 0.1) 50%, transparent 51%);
+  --hrsm-banner-card-stripe: repeating-linear-gradient(135deg,
+      rgba(255, 255, 255, 0) 0 10px, rgba(255, 255, 255, 0.35) 10px 14px);
+
+  /* ── バッジ ───────────────────────────────────────────── */
+  --hrsm-badge-new-bg: linear-gradient(180deg, #ff9a9a 0%, #ff3355 50%, #e0003a 52%, #c2002e 100%);
+  --hrsm-badge-new-ink: #ffffff;
+  --hrsm-badge-read-bg: linear-gradient(180deg, #ffffff 0%, #e4ebef 50%, #cfd9df 52%, #bcc8cf 100%);
+  --hrsm-badge-read-ink: #4a5d68;
+
+  /* ── コード（本文の可読性優先。前回のまま） ───────────── */
+  --hrsm-code-bg: #1f2b38;
+  --hrsm-code-ink: #e6edf3;
+  --hrsm-code-inline-bg: #e3f3fb;
+  --hrsm-code-inline-ink: #173a52;
+
+  /* ── 形・余白・動き ───────────────────────────────────── */
+  --hrsm-radius: 4px;
+  --hrsm-radius-lg: 8px;
+  --hrsm-gutter: 16px;
+  --hrsm-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --hrsm-duration: 200ms;
+
+  position: relative;
+  z-index: 0; /* 背景(.bg)をこの中に閉じ込める */
+  min-height: 100svh;
+  overflow-x: clip;
+  background: var(--hrsm-stripe-b); /* .bg の外側が見えたとき用 */
+  color: var(--hrsm-ink);
+  color-scheme: light;
+  font-family: var(--hrsm-font-body);
+  font-weight: 500;
+  line-height: 1.8;
+  letter-spacing: 0.02em;
+  -webkit-font-smoothing: antialiased;
+}
+
+.root *,
+.root *::before,
+.root *::after {
+  box-sizing: border-box;
+}
+
+.root :focus-visible {
+  outline: 2px solid var(--hrsm-link-hover);
+  outline-offset: 2px;
+}
+
+.root ::selection {
+  background: var(--hrsm-sky-light);
+  color: var(--hrsm-ink);
+}
+
+/* サブページの背景：淡い青の横ストライプ＋上端に空色のグラデーション。
+   タイトル画面は自前の背景で覆う */
+.bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(67, 198, 245, 0.35) 0%, transparent 260px),
+    repeating-linear-gradient(180deg, var(--hrsm-stripe-a) 0 4px, var(--hrsm-stripe-b) 4px 8px);
+}
+
+/* prefers-reduced-motion: /hrsm 配下のアニメーション・トランジションを一括停止。
+   各コンポーネントは「アニメーション無しの状態＝最終表示状態」になるよう書くこと */
+@media (prefers-reduced-motion: reduce) {
+  .root *,
+  .root *::before,
+  .root *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
