@@ -31,7 +31,7 @@ export default function ChapterList({ chapters }: { chapters: Chapter[] }) {
               ) : null}
               <span className={styles.cardMeta}>
                 <span>全{chapter.episodes.length}話</span>
-                <span>最新 {latest.publishedLabel}</span>
+                <span>最終更新【{latest.publishedLabel}】</span>
                 {newCount > 0 ? (
                   <span className={`${styles.badge} ${styles.badgeNew}`}>
                     NEW {newCount}

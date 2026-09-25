@@ -33,7 +33,7 @@ export default async function ArticlePage({
           <p className={styles.episodeLabel}>{episode.label}</p>
           <h1 className={styles.title}>{episode.title}</h1>
           <time className={styles.date} dateTime={episode.publishedAt}>
-            {episode.publishedLabel}
+            【{episode.publishedLabel}】
           </time>
         </header>
 

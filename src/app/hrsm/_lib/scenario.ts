@@ -4,11 +4,7 @@ import { cache } from "react";
 
 import { db } from "@/db";
 import { posts, series as seriesTable } from "@/db/schema";
-import {
-  formatBlogDate,
-  normalizeBlogSlug,
-  requireOwnerBlogUsername,
-} from "@/lib/blog";
+import { normalizeBlogSlug, requireOwnerBlogUsername } from "@/lib/blog";
 
 /*
  * シナリオ（ブログ）のデータ。既存のブログ（series / posts テーブル）をそのまま使う。
@@ -39,6 +35,20 @@ export type Chapter = {
   href: string;
   episodes: Episode[];
 };
+
+/* 表示用の日付「2026.09.25」（既存ブログと同じく日本時間） */
+function formatScenarioDate(value: Date) {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Tokyo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(value);
+  const get = (type: Intl.DateTimeFormatPartTypes) =>
+    parts.find((part) => part.type === type)?.value ?? "";
+
+  return `${get("year")}.${get("month")}.${get("day")}`;
+}
 
 export function chapterHref(chapterSlug: string) {
   return `/hrsm/blog/${chapterSlug}`;
@@ -75,7 +85,7 @@ export const getScenarioArchive = cache(async (): Promise<Chapter[]> => {
     href: `${chapterHref(chapterSlug)}/${post.slug}`,
     // lte(publishedAt, now) で null は除外済み
     publishedAt: post.publishedAt!.toISOString(),
-    publishedLabel: formatBlogDate(post.publishedAt),
+    publishedLabel: formatScenarioDate(post.publishedAt!),
   });
 
   const chapters: Chapter[] = [];

@@ -35,11 +35,13 @@ export default function HrsmProfilePage() {
     <AdvFrame back={{ href: "/hrsm", label: "タイトル" }} screen="PROFILE" title="プロフィール">
       <div className={styles.layout}>
         {/* 立ち絵の差し替え枠（画像や動画を置く場所） */}
-        <div className={styles.portrait}>
+        <div className={`${ui.message} ${styles.portrait}`}>
+          <span className={ui.nameBox}>Character</span>
           <span className={styles.portraitCap}>立ち絵</span>
         </div>
 
-        <section aria-labelledby="profile-name" className={`${ui.window} ${styles.status}`}>
+        <section aria-labelledby="profile-name" className={`${ui.message} ${styles.status}`}>
+          <span className={ui.nameBox}>Profile</span>
           <h1 className={styles.name} id="profile-name">
             HRSM
             <small>はるさめ</small>
@@ -58,14 +60,14 @@ export default function HrsmProfilePage() {
           <ul className={styles.links}>
             {links.map((link) => (
               <li key={link.href}>
+                <span className={styles.linkLabel}>{link.label}</span>
                 <a
                   className={styles.link}
                   href={link.href}
                   rel="noopener noreferrer"
                   target="_blank"
                 >
-                  <span>{link.label}</span>
-                  <strong>{link.detail}</strong>
+                  {link.detail}
                 </a>
               </li>
             ))}

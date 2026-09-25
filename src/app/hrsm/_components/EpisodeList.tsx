@@ -18,7 +18,7 @@ export default function EpisodeList({ episodes }: { episodes: Episode[] }) {
             <span className={styles.cardLabel}>{episode.label}</span>
             <span className={styles.cardTitle}>{episode.title}</span>
             <span className={styles.cardMeta}>
-              <time dateTime={episode.publishedAt}>{episode.publishedLabel}</time>
+              <time dateTime={episode.publishedAt}>【{episode.publishedLabel}】</time>
               <EpisodeBadge
                 publishedAt={episode.publishedAt}
                 slug={episode.slug}

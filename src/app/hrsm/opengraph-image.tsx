@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 /*
- * /hrsm 配下共通の OGP 画像（仮）。空のグラデーション + ロゴ。
+ * /hrsm 配下共通の OGP 画像（仮）。青空のグラデーション + 縁取りロゴ。
  * 既定フォントは日本語グリフを持たないため英字のみ。本番用の画像ができたら
  * このファイルを opengraph-image.png に置き換える。
  */
@@ -21,14 +21,21 @@ export default function OpenGraphImage() {
           alignItems: "center",
           justifyContent: "center",
           background:
-            "linear-gradient(180deg, #eaf7ff 0%, #c3e4f6 60%, #f4f9ee 100%)",
-          color: "#2a3b4d",
+            "linear-gradient(180deg, #1b8fe6 0%, #43c6f5 45%, #bdefff 78%, #ffffff 100%)",
+          color: "#ffffff",
         }}
       >
-        <div style={{ fontSize: 36, letterSpacing: 16, color: "#5c7085" }}>
+        <div style={{ fontSize: 36, letterSpacing: 16, color: "#00525c" }}>
           aynm.dev
         </div>
-        <div style={{ fontSize: 200, fontWeight: 700, letterSpacing: 24 }}>
+        <div
+          style={{
+            fontSize: 200,
+            fontWeight: 700,
+            letterSpacing: 24,
+            textShadow: "0 0 6px #00525c, 4px 6px 8px rgba(0, 30, 50, 0.45)",
+          }}
+        >
           HRSM
         </div>
       </div>

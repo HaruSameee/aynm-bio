@@ -10,8 +10,8 @@ export default function QuickMenu() {
   const pathname = usePathname();
 
   return (
-    <nav aria-label="クイックメニュー" className={styles.quick}>
-      <ul className={styles.quickList}>
+    <nav aria-label="サイトメニュー" className={styles.nav}>
+      <ul className={styles.navList}>
         {HRSM_MENU.map((item) => {
           const current =
             pathname === item.href || pathname.startsWith(`${item.href}/`);
@@ -20,7 +20,7 @@ export default function QuickMenu() {
             <li key={item.href}>
               <Link
                 aria-current={current ? "page" : undefined}
-                className={styles.quickLink}
+                className={styles.navLink}
                 href={item.href}
               >
                 {item.sub}
@@ -29,7 +29,7 @@ export default function QuickMenu() {
           );
         })}
         <li>
-          <Link className={styles.quickLink} href="/hrsm">
+          <Link className={styles.navLink} href="/hrsm">
             TITLE
           </Link>
         </li>
