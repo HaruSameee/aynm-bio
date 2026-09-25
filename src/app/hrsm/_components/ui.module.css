@@ -1,0 +1,48 @@
+/* /hrsm 共通のウィンドウ部品 */
+
+/* 半透明のパネル */
+.window {
+  position: relative;
+  border: 1px solid var(--hrsm-window-border);
+  border-radius: var(--hrsm-radius-lg);
+  background: var(--hrsm-window-bg);
+  box-shadow: var(--hrsm-window-shadow);
+  padding: clamp(20px, 4vw, 32px);
+}
+
+/* ADVのメッセージウィンドウ（名前枠つき） */
+.message {
+  composes: window;
+  margin-top: 18px;
+  padding-top: clamp(26px, 5vw, 34px);
+}
+
+.nameBox {
+  position: absolute;
+  top: 0;
+  left: clamp(16px, 4vw, 28px);
+  transform: translateY(-50%);
+  padding: 2px 16px;
+  border-radius: var(--hrsm-radius);
+  background: var(--hrsm-namebox-bg);
+  color: var(--hrsm-namebox-ink);
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
+  max-width: calc(100% - clamp(16px, 4vw, 28px) * 2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.messageText {
+  margin: 0;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

@@ -1,0 +1,202 @@
+.screen {
+  position: relative;
+  display: grid;
+  min-height: 100svh;
+  grid-template-rows: 1fr minmax(240px, auto) auto;
+  justify-items: center;
+  padding: var(--hrsm-gutter);
+  padding-bottom: max(var(--hrsm-gutter), env(safe-area-inset-bottom));
+}
+
+/* ── ロゴ ─────────────────────────────────────────── */
+.logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  grid-row: 1;
+  align-self: end;
+  margin: 0 0 clamp(24px, 6vh, 64px);
+  text-align: center;
+  animation: fadeIn 1.2s var(--hrsm-ease) both;
+}
+
+.logoSub {
+  color: var(--hrsm-ink-soft);
+  font-size: 0.8rem;
+  letter-spacing: 0.4em;
+}
+
+.logoMain {
+  color: var(--hrsm-ink);
+  font-family: var(--hrsm-font-heading);
+  font-size: clamp(3.5rem, 16vw, 7.5rem);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1.1;
+  text-shadow: 0 0 32px rgba(255, 255, 255, 0.9);
+}
+
+.logoJa {
+  margin-top: 0.4rem;
+  color: var(--hrsm-ink-soft);
+  font-family: var(--hrsm-font-heading);
+  font-size: clamp(0.95rem, 3.6vw, 1.2rem);
+  letter-spacing: 0.3em;
+}
+
+/* ── クリック／タップでスタート ───────────────────── */
+/* 画面全体が押せる。フッターのリンクだけは上に重ねて押せるようにする */
+.start {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0 var(--hrsm-gutter) clamp(120px, 24vh, 220px);
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.start:focus-visible {
+  outline: none;
+}
+
+.startText {
+  padding: 0.4rem 1rem;
+  color: var(--hrsm-ink);
+  font-size: clamp(0.9rem, 3.4vw, 1.05rem);
+  letter-spacing: 0.35em;
+  animation: pulse 2.4s ease-in-out infinite;
+}
+
+.start:focus-visible .startText {
+  outline: 2px solid var(--hrsm-ink);
+  outline-offset: 2px;
+}
+
+.startCoarse {
+  display: none;
+}
+
+@media (pointer: coarse) {
+  .startFine {
+    display: none;
+  }
+
+  .startCoarse {
+    display: inline;
+  }
+}
+
+/* ── メニュー ─────────────────────────────────────── */
+.menu {
+  grid-row: 2;
+  align-self: start;
+  width: min(100%, 360px);
+}
+
+.menuList {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.menuItem {
+  animation: fadeUp 0.5s var(--hrsm-ease) both;
+  animation-delay: calc(var(--i, 0) * 80ms);
+}
+
+.menuLink {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 52px;
+  padding: 12px 20px 12px 36px;
+  border: 1px solid var(--hrsm-window-border);
+  border-radius: var(--hrsm-radius);
+  background: var(--hrsm-window-bg);
+  box-shadow: var(--hrsm-window-shadow);
+  color: var(--hrsm-ink);
+  text-decoration: none;
+  transition:
+    background-color var(--hrsm-duration) var(--hrsm-ease),
+    transform var(--hrsm-duration) var(--hrsm-ease);
+}
+
+.menuLink::before {
+  content: "▶";
+  position: absolute;
+  top: 50%;
+  left: 14px;
+  color: var(--hrsm-accent);
+  font-size: 0.7rem;
+  opacity: 0;
+  transform: translateY(-50%);
+  transition: opacity var(--hrsm-duration) var(--hrsm-ease);
+}
+
+.menuLink:hover,
+.menuLink:focus-visible {
+  background: var(--hrsm-window-bg-hover);
+  transform: translateX(4px);
+}
+
+.menuLink:hover::before,
+.menuLink:focus-visible::before {
+  opacity: 1;
+}
+
+.menuLabel {
+  font-family: var(--hrsm-font-heading);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+}
+
+.menuSub {
+  color: var(--hrsm-ink-soft);
+  font-size: 0.72rem;
+  letter-spacing: 0.25em;
+}
+
+/* ── フッター ─────────────────────────────────────── */
+.footer {
+  grid-row: 3;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 16px;
+  color: var(--hrsm-ink-soft);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+}
+
+.footerLink {
+  color: inherit;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.35;
+  }
+}

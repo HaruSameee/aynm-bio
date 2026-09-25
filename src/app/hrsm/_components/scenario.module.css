@@ -1,0 +1,139 @@
+/* シナリオアーカイブ（章選択・話選択） */
+
+.prompt {
+  margin-bottom: 24px;
+}
+
+.empty {
+  color: var(--hrsm-ink-soft);
+  text-align: center;
+}
+
+.list {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 5.5em minmax(0, 1fr);
+  column-gap: 16px;
+  row-gap: 4px;
+  align-items: baseline;
+  min-height: 64px;
+  padding: 16px 20px;
+  border: 1px solid var(--hrsm-window-border);
+  border-left: 4px solid var(--hrsm-accent);
+  border-radius: var(--hrsm-radius);
+  background: var(--hrsm-window-bg);
+  box-shadow: var(--hrsm-window-shadow);
+  color: var(--hrsm-ink);
+  text-decoration: none;
+  transition:
+    background-color var(--hrsm-duration) var(--hrsm-ease),
+    transform var(--hrsm-duration) var(--hrsm-ease);
+}
+
+.card:hover,
+.card:focus-visible {
+  background: var(--hrsm-window-bg-hover);
+  transform: translateX(4px);
+}
+
+.cardLabel {
+  grid-row: span 3;
+  color: var(--hrsm-ink-soft);
+  font-family: var(--hrsm-font-heading);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+
+.cardTitle {
+  font-family: var(--hrsm-font-heading);
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.cardDescription {
+  color: var(--hrsm-ink-soft);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.cardMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  color: var(--hrsm-ink-soft);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+}
+
+/* NEW / 既読バッジ */
+.badge {
+  display: inline-block;
+  padding: 0 8px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1.7;
+  white-space: nowrap;
+}
+
+.badgeNew {
+  background: var(--hrsm-badge-new-bg);
+  color: var(--hrsm-badge-new-ink);
+}
+
+.badgeRead {
+  background: var(--hrsm-badge-read-bg);
+  color: var(--hrsm-badge-read-ink);
+}
+
+/* 章の見出し */
+.chapterHeader {
+  margin-bottom: 20px;
+}
+
+.chapterLabel {
+  margin: 0;
+  color: var(--hrsm-ink-soft);
+  font-size: 0.8rem;
+  letter-spacing: 0.3em;
+}
+
+.chapterTitle {
+  margin: 0;
+  font-family: var(--hrsm-font-heading);
+  font-size: clamp(1.4rem, 5vw, 1.9rem);
+  letter-spacing: 0.08em;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.chapterDescription {
+  margin: 8px 0 0;
+  color: var(--hrsm-ink-soft);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 560px) {
+  .card {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 14px 16px;
+  }
+
+  .cardLabel {
+    grid-row: auto;
+    font-size: 0.8rem;
+  }
+}

@@ -1,0 +1,130 @@
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  gap: clamp(16px, 3vw, 28px);
+  align-items: stretch;
+}
+
+/* 立ち絵の差し替え枠 */
+.portrait {
+  display: grid;
+  min-height: 360px;
+  place-items: center;
+  border: 1px dashed var(--hrsm-ink-faint);
+  border-radius: var(--hrsm-radius-lg);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.15));
+}
+
+.portraitCap {
+  color: var(--hrsm-ink-faint);
+  font-size: 0.8rem;
+  letter-spacing: 0.3em;
+}
+
+.status {
+  min-width: 0;
+}
+
+.name {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 0 0 16px;
+  font-family: var(--hrsm-font-heading);
+  font-size: clamp(1.8rem, 6vw, 2.4rem);
+  letter-spacing: 0.12em;
+  line-height: 1.2;
+}
+
+.name small {
+  color: var(--hrsm-ink-soft);
+  font-size: 0.9rem;
+  letter-spacing: 0.2em;
+}
+
+.rows {
+  margin: 0;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 7em minmax(0, 1fr);
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--hrsm-window-line);
+}
+
+.row dt {
+  color: var(--hrsm-ink-soft);
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+}
+
+.row dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.subheading {
+  margin: 24px 0 8px;
+  color: var(--hrsm-ink-soft);
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.35em;
+}
+
+.links {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.link {
+  display: flex;
+  flex-direction: column;
+  min-height: 52px;
+  padding: 8px 12px;
+  border: 1px solid var(--hrsm-window-line);
+  border-radius: var(--hrsm-radius);
+  color: var(--hrsm-ink);
+  text-decoration: none;
+  line-height: 1.4;
+}
+
+.link:hover {
+  border-color: var(--hrsm-accent);
+  background: var(--hrsm-window-bg-hover);
+}
+
+.link span {
+  color: var(--hrsm-ink-soft);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+}
+
+.link strong {
+  overflow-wrap: anywhere;
+  font-weight: 500;
+}
+
+.bio {
+  margin: 0;
+}
+
+.bio + .bio {
+  margin-top: 0.6em;
+}
+
+@media (max-width: 720px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .portrait {
+    min-height: 0;
+    aspect-ratio: 4 / 3;
+  }
+}

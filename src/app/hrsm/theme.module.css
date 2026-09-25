@@ -1,0 +1,142 @@
+/* ============================================================
+   /hrsm ― ADV(ノベルゲー)風サイトのデザイントークン
+   配色・フォントは仮の値。差し替えるときはこのファイルの
+   .root 内の変数だけを書き換えれば全画面に反映される。
+   ============================================================ */
+
+.root {
+  /* ── フォント（仮：システムフォント） ───────────────────── */
+  --hrsm-font-body: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic",
+    "Noto Sans JP", sans-serif;
+  --hrsm-font-heading: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP",
+    serif;
+  --hrsm-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", monospace;
+
+  /* ── 文字色 ─────────────────────────────────────────── */
+  --hrsm-ink: #2a3b4d; /* 本文・見出し */
+  --hrsm-ink-soft: #5c7085; /* ラベル・補助テキスト */
+  --hrsm-ink-faint: #9ab0bf; /* 罫線・最も淡い補助 */
+  --hrsm-ink-inverse: #ffffff; /* 濃い地の上の文字 */
+
+  /* ── アクセント ─────────────────────────────────────── */
+  --hrsm-accent: #e9a0b4;
+  --hrsm-accent-strong: #d77a95;
+  --hrsm-accent-soft: rgba(233, 160, 180, 0.2);
+
+  /* ── 背景（空・光） ─────────────────────────────────── */
+  --hrsm-sky-top: #eaf7ff;
+  --hrsm-sky-mid: #c3e4f6;
+  --hrsm-sky-bottom: #f4f9ee;
+  --hrsm-glow: #fff8e6;
+  /* 1枚絵に差し替えるときは none を url("/hrsm/...") に */
+  --hrsm-bg-image: none;
+
+  /* ── ウィンドウ（メッセージ枠・パネル） ─────────────── */
+  --hrsm-window-bg: rgba(255, 253, 248, 0.84);
+  --hrsm-window-bg-hover: rgba(255, 255, 255, 0.95);
+  --hrsm-window-border: rgba(255, 255, 255, 0.95);
+  --hrsm-window-line: rgba(154, 176, 191, 0.45);
+  --hrsm-window-shadow: 0 8px 28px rgba(42, 59, 77, 0.12);
+  --hrsm-namebox-bg: #5c7085;
+  --hrsm-namebox-ink: #ffffff;
+
+  /* ── バッジ ─────────────────────────────────────────── */
+  --hrsm-badge-new-bg: #e9a0b4;
+  --hrsm-badge-new-ink: #ffffff;
+  --hrsm-badge-read-bg: rgba(154, 176, 191, 0.25);
+  --hrsm-badge-read-ink: #5c7085;
+
+  /* ── コード ─────────────────────────────────────────── */
+  --hrsm-code-bg: #1f2b38;
+  --hrsm-code-ink: #e6edf3;
+  --hrsm-code-inline-bg: rgba(92, 112, 133, 0.12);
+  --hrsm-code-inline-ink: #2a3b4d;
+
+  /* ── 形・余白・動き ─────────────────────────────────── */
+  --hrsm-radius: 4px;
+  --hrsm-radius-lg: 10px;
+  --hrsm-gutter: clamp(16px, 4vw, 40px);
+  --hrsm-content-width: 960px;
+  --hrsm-reading-width: 720px;
+  --hrsm-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --hrsm-duration: 400ms;
+
+  position: relative;
+  z-index: 0; /* 背景(.bg)をこの中に閉じ込める */
+  min-height: 100svh;
+  overflow-x: clip;
+  background: var(--hrsm-sky-bottom); /* .bg の外側が見えたとき用 */
+  color: var(--hrsm-ink);
+  color-scheme: light;
+  font-family: var(--hrsm-font-body);
+  line-height: 1.8;
+  letter-spacing: 0.03em;
+  -webkit-font-smoothing: antialiased;
+}
+
+.root *,
+.root *::before,
+.root *::after {
+  box-sizing: border-box;
+}
+
+.root :focus-visible {
+  outline: 2px solid var(--hrsm-ink);
+  outline-offset: 2px;
+}
+
+.root ::selection {
+  background: var(--hrsm-accent-soft);
+  color: var(--hrsm-ink);
+}
+
+/* 背景担当はこの1要素だけ。全ページで共有し、画面遷移しても再描画されない */
+.bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    var(--hrsm-bg-image) center / cover no-repeat,
+    radial-gradient(110% 80% at 80% 0%, var(--hrsm-glow) 0%, transparent 45%),
+    radial-gradient(140% 110% at 50% 115%, var(--hrsm-sky-bottom) 0%, transparent 55%),
+    linear-gradient(180deg, var(--hrsm-sky-top) 0%, var(--hrsm-sky-mid) 60%, var(--hrsm-sky-bottom) 100%);
+}
+
+/* 差し込む光（斜めの光芒）。reduced-motion 時は静止 */
+.bg::after {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background: repeating-linear-gradient(
+    115deg,
+    transparent 0 80px,
+    rgba(255, 255, 255, 0.22) 80px 120px,
+    transparent 120px 220px
+  );
+  mask-image: radial-gradient(70% 60% at 75% 10%, #000 0%, transparent 70%);
+  animation: hrsmLightSway 14s ease-in-out infinite alternate;
+}
+
+@keyframes hrsmLightSway {
+  from {
+    transform: translateX(-2%);
+  }
+  to {
+    transform: translateX(2%);
+  }
+}
+
+/* prefers-reduced-motion: /hrsm 配下のアニメーション・トランジションを一括停止。
+   各コンポーネントは「アニメーション無しの状態＝最終表示状態」になるよう書くこと */
+@media (prefers-reduced-motion: reduce) {
+  .root *,
+  .root *::before,
+  .root *::after,
+  .bg::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
