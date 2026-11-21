@@ -1,173 +1,207 @@
-import type { Metadata } from "next";
-import Link from "next/link";
+import type { Metadata, Viewport } from "next";
+import { Fragment } from "react";
+import { DM_Mono, Klee_One, Zen_Kaku_Gothic_New } from "next/font/google";
 
+import DiveEffects from "./DiveEffects";
 import styles from "./hrsm.module.css";
 
-const profileLinks = [
-  {
-    label: "GitHub",
-    href: "https://github.com/HaruSameee",
-    detail: "HaruSameee",
-  },
-  {
-    label: "X",
-    href: "https://x.com/hrs0_0m",
-    detail: "@hrs0_0m",
-  },
-  {
-    label: "Telegram",
-    href: "https://t.me/HRSM_L",
-    detail: "HRSM_L",
-  },
-  {
-    label: "Discord",
-    href: "https://discord.gg/aynm",
-    detail: "aynm",
-  },
-];
+const hand = Klee_One({
+  weight: "600",
+  display: "swap",
+  preload: false,
+  variable: "--font-hand",
+});
 
-const profileRows = [
-  { label: "なまえ", value: "HRSM (はるさめ)" },
-  { label: "ROLE", value: "Engineer" },
-  { label: "MAIN", value: "Rust" },
-  { label: "SUB", value: "TypeScript" },
-  { label: "FIELD", value: "Systems" },
-  { label: "AGE", value: "17" },
-  { label: "STATE", value: "Available" },
-];
+const body = Zen_Kaku_Gothic_New({
+  weight: ["400", "500", "700"],
+  display: "swap",
+  preload: false,
+  variable: "--font-body",
+});
 
-const signalLog = [
-  "でんぱ じゅしんちゅう …………… OK",
-  "あきば はっしんきょてん ………… OK",
-  "Rust コンパイル ………………… ERROR は 愛",
-  "のうは どうきりつ 99.9% (さように エラー)",
-  "※このページは せいじょう です(たぶん)",
-];
-
-const marqueeText =
-  "★ ようこそ はるさめのへや へ ★ でんぱ じゅしんちゅう ★ かんりにん: hrsm ★ リンクは じゆう に どうぞ ★ ";
+const mono = DM_Mono({
+  weight: ["400", "500"],
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-mono",
+});
 
 export const metadata: Metadata = {
-  title: "hrsmのへや | aynm.dev",
-  description: "HRSM profile on aynm.dev",
+  title: "春鮫 | HRSM",
+  description: "VRChatでワールドとギミックを作っている、HRSM（はるさめ）のページ。",
 };
 
-function isExternalLink(href: string) {
-  return href.startsWith("http");
+export const viewport: Viewport = {
+  viewportFit: "cover",
+  themeColor: "#f6fbf9",
+};
+
+const facts = [
+  { label: "なまえ", value: "HRSM（はるさめ）" },
+  { label: "VRChat", value: "hrs0_0m", mono: true },
+  { label: "つくるもの", value: "ワールド、ギミック、アバター改変" },
+  { label: "しごと", value: "フリーランスのエンジニア（Rust / TypeScript）" },
+  { label: "いる場所", value: "Discordコミュニティ「illusion」" },
+];
+
+const works = [
+  {
+    name: "HResort",
+    tag: "ワールド ・ 公開中",
+    text: "VRChatで公開しているワールド。Avatar Illusionerも置いてあります。",
+  },
+  {
+    name: "Avatar Illusioner",
+    tag: "ギミック ・ 無料配布",
+    text: "アバターを分身として立体投影するギミック。BOOTHで配っています。",
+  },
+  {
+    name: "Assay",
+    tag: "Webサービス",
+    text: "ポケモンユナイトの非公式ランクマッチ。",
+  },
+  {
+    name: "RFST",
+    tag: "ツール ・ Rust",
+    text: "声のフォルマントをリアルタイムで動かすツール。",
+  },
+  {
+    name: "Rust-VC",
+    tag: "ツール ・ Rust",
+    text: "音声変換のRVCを、Rustで再実装したもの。",
+  },
+];
+
+const links = [
+  {
+    key: "VRCHAT",
+    label: "hrs0_0m",
+    href: "https://vrchat.com/home/user/usr_4d291333-4bbd-4128-87c8-b8442f35d433",
+  },
+  { key: "X", label: "@hrs0_0m", href: "https://x.com/hrs0_0m" },
+  { key: "BOOTH", label: "haruhasame", href: "https://haruhasame.booth.pm" },
+  { key: "GITHUB", label: "HaruSameee", href: "https://github.com/HaruSameee" },
+  { key: "DISCORD", label: "illusion", href: "https://discord.gg/mDQHNAM22X" },
+];
+
+const SHARK_PATH =
+  "M4,50C28,34 62,28 96,29L118,6C116,18 120,27 132,31C160,35 184,41 204,44L236,12C226,30 220,42 219,50L232,74C218,66 208,58 200,53C176,58 152,62 128,63L108,63L106,86C98,76 88,66 80,62C52,62 24,58 4,50Z";
+
+function Shark({ reverse = false }: { reverse?: boolean }) {
+  return (
+    <svg
+      aria-hidden="true"
+      className={reverse ? `${styles.shark} ${styles.rev}` : styles.shark}
+      viewBox="0 0 240 90"
+    >
+      <path d={SHARK_PATH} />
+    </svg>
+  );
+}
+
+function Eyebrow({ depth, zone }: { depth: string; zone: string }) {
+  return (
+    <p className={styles.eyebrow}>
+      <span>水深 {depth} m</span>
+      <span>{zone}</span>
+    </p>
+  );
 }
 
 export default function HrsmPage() {
   return (
-    <main className={styles.stage}>
-      <div className={styles.window}>
-        <div className={styles.titleBar}>
-          <span className={styles.titleBarText}>
-            hrsm.exe ― でんぱ じゅしんちゅう
-          </span>
-          <span className={styles.winButtons} aria-hidden="true">
-            <span className={styles.winBtn}>_</span>
-            <span className={styles.winBtn}>□</span>
-            <span className={styles.winBtn}>×</span>
-          </span>
-        </div>
+    <div className={`${styles.ocean} ${hand.variable} ${body.variable} ${mono.variable}`}>
+      <DiveEffects />
 
-        <div className={styles.windowBody}>
-          <div className={styles.marquee} aria-hidden="true">
-            <div className={styles.marqueeTrack}>
-              <span>{marqueeText}</span>
-              <span>{marqueeText}</span>
+      <main>
+        <header className={`${styles.zone} ${styles.surface}`}>
+          <div className={styles.rays} />
+          <div className={styles.col}>
+            <Eyebrow depth="0" zone="水面" />
+            <h1 className={styles.name}>春鮫</h1>
+            <div className={styles.intro}>
+              <p className={styles.handle}>
+                HRSM<span>はるさめ</span>
+              </p>
+              <p className={styles.line}>VRChatでワールドとギミックを作っている、Rust書きです。</p>
+              <p className={styles.hint}>スクロールで潜る</p>
             </div>
           </div>
+        </header>
 
-          <header className={styles.header}>
-            <p className={styles.headerKaomoji}>(๑•̀ㅂ•́)و✧</p>
-            <h1 className={styles.title}>
-              <span className={styles.blink}>★</span> HRSM{" "}
-              <span className={styles.blink}>★</span>
-            </h1>
-            <p className={styles.titleSub}>～ はるさめのへや ～</p>
-            <p className={styles.headerNote}>
-              ※このページは 800×600 のかいぞうどで みてね
-            </p>
-          </header>
+        <div aria-hidden="true" className={`${styles.open} ${styles.o1}`}>
+          <Shark />
+        </div>
 
-          <div className={styles.rainbowBar} aria-hidden="true" />
-
-          <section aria-labelledby="profile-title">
-            <h2 id="profile-title" className={styles.sectionTitle}>
-              ◆ プロフちょう ◆
-            </h2>
-            <dl className={styles.profTable}>
-              {profileRows.map((row) => (
-                <div className={styles.profRow} key={row.label}>
-                  <dt>{row.label}</dt>
-                  <dd>{row.value}</dd>
-                </div>
+        <section className={`${styles.zone} ${styles.shallows}`} id="about">
+          <div className={styles.col}>
+            <Eyebrow depth="10" zone="表層" />
+            <h2 className={styles.heading}>この人について</h2>
+            <dl className={styles.facts}>
+              {facts.map((f) => (
+                <Fragment key={f.label}>
+                  <dt>{f.label}</dt>
+                  <dd className={f.mono ? styles.id : undefined}>{f.value}</dd>
+                </Fragment>
               ))}
             </dl>
-          </section>
+          </div>
+        </section>
 
-          <section aria-labelledby="denpa-title">
-            <h2 id="denpa-title" className={styles.sectionTitle}>
-              ◆ でんぱログ ◆
-            </h2>
-            <div className={styles.terminal}>
-              {signalLog.map((line) => (
-                <p className={styles.termLine} key={line}>
-                  &gt; {line}
-                </p>
-              ))}
-              <p className={styles.termLine}>
-                &gt; <span className={styles.termCursor}>▮</span>
-              </p>
-            </div>
-          </section>
-
-          <p className={styles.bio}>
-            ★ ひとこと ★ 追記よてい…………………………でんぱが よわい
-          </p>
-
-          <div className={styles.rainbowBar} aria-hidden="true" />
-
-          <section aria-labelledby="link-title">
-            <h2 id="link-title" className={styles.sectionTitle}>
-              ◆ りんくしゅう ◆
-            </h2>
-            <div className={styles.linkGrid}>
-              {profileLinks.map((item) => {
-                const external = isExternalLink(item.href);
-
-                return (
-                  <Link
-                    aria-label={`${item.label}: ${item.detail}`}
-                    className={styles.linkBtn}
-                    href={item.href}
-                    key={item.href}
-                    rel={external ? "noopener noreferrer" : undefined}
-                    target={external ? "_blank" : undefined}
-                  >
-                    <span>{item.label}</span>
-                    <strong>{item.detail}</strong>
-                  </Link>
-                );
-              })}
-            </div>
-          </section>
-
-          <footer className={styles.footer}>
-            <p>
-              キミは <span className={styles.counterNum}>0131072</span>{" "}
-              にんめの ほうもんしゃ だよ! キリばん ふんだら おしえてね
-            </p>
-            <p>
-              かんりにん: hrsm / since 2024 /{" "}
-              <Link className={styles.licenseLink} href="/hrsm/license">
-                License
-              </Link>
-            </p>
-          </footer>
+        <div aria-hidden="true" className={`${styles.open} ${styles.o2}`}>
+          <Shark reverse />
         </div>
-      </div>
-    </main>
+
+        <section className={`${styles.zone} ${styles.mid}`} id="works">
+          <div className={styles.col}>
+            <Eyebrow depth="200" zone="中深層" />
+            <h2 className={styles.heading}>つくったもの</h2>
+            <ul className={styles.works}>
+              {works.map((w) => (
+                <li key={w.name}>
+                  <div className={styles.workHead}>
+                    <h3>{w.name}</h3>
+                    <span className={styles.tag}>{w.tag}</span>
+                  </div>
+                  <p>{w.text}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        <div aria-hidden="true" className={`${styles.open} ${styles.o3}`}>
+          <Shark />
+        </div>
+
+        <section className={`${styles.zone} ${styles.deep}`} id="links">
+          <div className={styles.col}>
+            <Eyebrow depth="1,000" zone="漸深層" />
+            <h2 className={styles.heading}>つながる</h2>
+            <ul className={styles.links}>
+              {links.map((l) => (
+                <li key={l.key}>
+                  <a className={styles.row} href={l.href} rel="noopener noreferrer" target="_blank">
+                    <span className={styles.k}>{l.key}</span>
+                    <span className={styles.v}>{l.label}</span>
+                    <span className={styles.go}>→</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+
+            <pre className={styles.log}>
+              {"> せんすい かいし ...... "}
+              <b>OK</b>
+              {"\n> すいしん 1,000 m .... "}
+              <b>とうたつ</b>
+              {"\n> Rust コンパイル ..... "}
+              <b>ERROR は 愛</b>
+              {"\n> ※このサメは むがい です(たぶん)"}
+            </pre>
+          </div>
+        </section>
+      </main>
+    </div>
   );
 }

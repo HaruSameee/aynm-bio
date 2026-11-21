@@ -1,332 +1,553 @@
-/* 昔の秋葉原 = レトロPC(Win98/PC-98) × 2000年代個人サイト */
+/*
+  春鮫 — 1ページの水柱。スクロール = 潜水。
+  水面 → 表層(10m) → 中深層(200m) → 漸深層(1,000m)。ゾーンの間は鮫が横切る外洋。
+  右端の水深ゲージは DiveEffects.tsx が更新する。
+*/
 
-.stage {
-  min-height: 100svh;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding: clamp(12px, 4vw, 48px) 12px 48px;
-  background:
-    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.12) 0 1px, transparent 1px 4px),
-    #008080;
-  color: #000;
-  font-family: "DotGothic16", "MS Gothic", "ＭＳ ゴシック", "Hiragino Kaku Gothic ProN", monospace;
-  font-size: 15px;
-  line-height: 1.6;
+.ocean {
+  --sky: #f6fbf9;
+  --shoal: #cdeeea;
+  --lagoon: #7ccad2;
+  --reef: #4fa9c0;
+  --current: #1f6e97;
+  --trench: #0d355a;
+  --dusk: #081c36;
+  --abyss: #040a16;
+  --ink: #0b2a44;
+  --foam: #eef8f7;
+  --lantern: #ffe6a3;
+  --light: #ffffff;
+
+  --display: var(--font-hand), "Hiragino Maru Gothic ProN", "Yu Gothic", sans-serif;
+  --body: var(--font-body), "Hiragino Kaku Gothic ProN", "Yu Gothic", "Noto Sans JP", system-ui, sans-serif;
+  --mono: var(--font-mono), ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  --t-xs: 0.75rem;
+  --t-s: 0.875rem;
+  --t-m: 1rem;
+  --t-l: clamp(1.6rem, 6.2vw, 2.25rem);
+  --gauge: 44px;
+
+  position: relative;
+  background: var(--abyss);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: var(--t-m);
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
 }
 
-/* ---- Win98風ウィンドウ ---- */
-
-.window {
-  width: min(720px, 100%);
-  border: 2px outset #dfdfdf;
-  background: #c0c0c0;
-  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.4);
-  padding: 2px;
+/* オーバースクロール時に上は空、下は深海が見えるように */
+:global(html):has(.ocean) {
+  background: linear-gradient(#f6fbf9 0 50%, #040a16 50% 100%);
 }
 
-.titleBar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  background: linear-gradient(90deg, #000080, #1084d0);
-  color: #fff;
-  padding: 3px 4px 3px 8px;
-  font-weight: 900;
-  letter-spacing: 0.08em;
+:global(body):has(.ocean) {
+  background: #040a16;
 }
 
-.titleBarText {
+/* ---------- water column ---------- */
+
+.zone,
+.open {
+  position: relative;
+}
+
+.open {
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
-.winButtons {
-  display: inline-flex;
-  flex: 0 0 auto;
-  gap: 2px;
+.col {
+  position: relative;
+  z-index: 2;
+  max-width: 640px;
+  margin-inline: auto;
+  padding-left: max(20px, env(safe-area-inset-left, 0px));
+  padding-right: max(calc(var(--gauge) + 12px), calc(env(safe-area-inset-right, 0px) + var(--gauge)));
 }
 
-.winBtn {
-  display: inline-flex;
-  width: 18px;
-  height: 16px;
-  align-items: center;
-  justify-content: center;
-  border: 1px outset #dfdfdf;
-  background: #c0c0c0;
-  color: #000;
-  font-size: 11px;
-  line-height: 1;
+.zone .col {
+  padding-block: 9svh 11svh;
 }
 
-.windowBody {
-  margin: 2px;
-  border: 2px inset #dfdfdf;
-  background:
-    repeating-linear-gradient(0deg, transparent 0 23px, rgba(0, 0, 128, 0.05) 23px 24px),
-    #ffffef;
-  padding: 0 14px 14px;
+.surface {
+  background: linear-gradient(var(--sky), var(--shoal));
 }
 
-/* ---- マーキー ---- */
+.o1 {
+  height: 26svh;
+  background: linear-gradient(var(--shoal), var(--lagoon));
+}
 
-.marquee {
+.shallows {
+  background: linear-gradient(var(--lagoon), var(--reef));
+}
+
+.o2 {
+  height: 44svh;
+  background: linear-gradient(var(--reef), var(--current) 45%, var(--trench));
+}
+
+.mid {
+  background: linear-gradient(var(--trench), var(--dusk));
+  color: var(--foam);
+}
+
+.o3 {
+  height: 44svh;
+  background: linear-gradient(var(--dusk), var(--abyss));
+}
+
+.deep {
+  background: var(--abyss);
+  color: var(--foam);
+}
+
+.drift {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ---------- surface ---------- */
+
+.rays {
+  position: absolute;
+  inset: 0;
   overflow: hidden;
-  margin: 0 -14px;
-  border-bottom: 1px dashed #f0f;
-  background: #000080;
-  color: #ff0;
-  white-space: nowrap;
+  pointer-events: none;
 }
 
-.marqueeTrack {
-  display: inline-flex;
-  width: max-content;
-  padding: 4px 0;
-  font-weight: 900;
-  animation: marquee 20s linear infinite;
+.rays::before,
+.rays::after {
+  content: "";
+  position: absolute;
+  top: -10%;
+  left: -25%;
+  width: 150%;
+  height: 125%;
+  transform-origin: 50% 0;
+  -webkit-mask-image: linear-gradient(#000, transparent 88%);
+  mask-image: linear-gradient(#000, transparent 88%);
+  animation: sway 15s ease-in-out infinite alternate;
 }
 
-@keyframes marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-/* ---- ヘッダー ---- */
-
-.header {
-  padding-top: 16px;
-  text-align: center;
-}
-
-.headerKaomoji {
-  margin: 0;
-  color: #f0f;
-  font-size: 1.2rem;
-}
-
-.title {
-  margin: 6px 0 0;
-  color: #000080;
-  font-size: clamp(2.6rem, 9vw, 4.4rem);
-  font-weight: 900;
-  letter-spacing: 0.06em;
-  text-shadow:
-    2px 2px 0 #f0f,
-    4px 4px 0 #0ff;
-}
-
-.blink {
-  color: #f0f;
-  animation: blink 1s steps(2) infinite;
-}
-
-@keyframes blink {
-  50% {
-    opacity: 0;
-  }
-}
-
-.titleSub {
-  margin: 4px 0 0;
-  color: #c000c0;
-  font-weight: 900;
-  letter-spacing: 0.3em;
-}
-
-.headerNote {
-  margin: 8px 0 0;
-  color: #666;
-  font-size: 0.75rem;
-}
-
-/* ---- 虹色の区切り線 ---- */
-
-.rainbowBar {
-  height: 6px;
-  margin: 16px 0;
-  border: 1px outset #dfdfdf;
-  background: linear-gradient(
-    90deg,
-    #f00,
-    #ff8000,
-    #ff0,
-    #0f0,
-    #00f,
-    #4b0082,
-    #9400d3
+.rays::before {
+  background: repeating-linear-gradient(
+    101deg,
+    transparent 0 7%,
+    color-mix(in srgb, var(--light) 70%, transparent) 9% 11%,
+    transparent 13% 23%
   );
 }
 
-/* ---- セクション見出し ---- */
-
-.sectionTitle {
-  margin: 0 0 10px;
-  color: #000080;
-  font-size: 1.05rem;
-  font-weight: 900;
+.rays::after {
+  background: repeating-linear-gradient(
+    97deg,
+    transparent 0 12%,
+    color-mix(in srgb, var(--light) 55%, transparent) 13.5% 14.5%,
+    transparent 16% 31%
+  );
+  animation-duration: 23s;
+  animation-direction: alternate-reverse;
 }
 
-/* ---- プロフ帳テーブル ---- */
-
-.profTable {
-  margin: 0;
-  border: 2px inset #dfdfdf;
-  background: #fff;
+@keyframes sway {
+  from {
+    transform: skewX(-6deg) translateX(-2%);
+  }
+  to {
+    transform: skewX(5deg) translateX(2%);
+  }
 }
 
-.profRow {
+.surface .col {
+  padding-block: 72px 8svh;
+  min-height: min(74svh, 600px);
   display: grid;
-  grid-template-columns: 130px minmax(0, 1fr);
+  align-content: end;
 }
 
-.profRow + .profRow {
-  border-top: 1px dotted #999;
+.name {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(4rem, 22vw, 7rem);
+  line-height: 1.2;
+  letter-spacing: 0.16em;
+  color: var(--ink);
+  margin: 0.12em 0 0.22em -0.04em;
 }
 
-.profRow dt {
-  border-right: 1px dotted #999;
-  background: #e0e0ff;
-  color: #000080;
-  font-weight: 900;
-  padding: 6px 10px;
-}
-
-.profRow dd {
-  margin: 0;
-  color: #c00080;
-  font-weight: 900;
-  padding: 6px 10px;
-}
-
-/* ---- 電波ログ(ターミナル) ---- */
-
-.terminal {
-  border: 2px inset #dfdfdf;
-  background: #000;
-  padding: 10px 12px;
-}
-
-.termLine {
-  margin: 0;
-  color: #33ff33;
-  font-size: 0.85rem;
-  line-height: 1.9;
-}
-
-.termCursor {
-  animation: blink 0.8s steps(2) infinite;
-}
-
-/* ---- ひとこと ---- */
-
-.bio {
-  margin: 16px 0 0;
-  border: 1px dashed #f0f;
-  background: #fff0ff;
-  color: #800080;
-  padding: 8px 12px;
-}
-
-/* ---- リンク(Win95風ボタン) ---- */
-
-.linkGrid {
+.intro {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
+  gap: 14px;
 }
 
-.linkBtn {
+.handle {
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: var(--t-s);
+  letter-spacing: 0.34em;
+}
+
+.handle span {
+  font-family: var(--body);
+  letter-spacing: 0.12em;
+  margin-left: 0.6em;
+  opacity: 0.7;
+}
+
+.line {
+  font-size: var(--t-m);
+  max-width: 17em;
+}
+
+.hint {
+  font-family: var(--mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.08em;
+  opacity: 0.65;
   display: flex;
-  min-height: 54px;
-  flex-direction: column;
-  justify-content: center;
-  border: 2px outset #dfdfdf;
-  background: #c0c0c0;
-  color: #000;
-  padding: 6px 12px;
+  align-items: center;
+  gap: 0.7em;
+}
+
+.hint::before {
+  content: "";
+  width: 1px;
+  height: 2.6em;
+  background: currentColor;
+  animation: sink 2.4s ease-in-out infinite;
+}
+
+@keyframes sink {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  55% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  56% {
+    transform-origin: bottom;
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
+
+/* ---------- shark ---------- */
+
+.shark {
+  position: absolute;
+  left: 0;
+  top: var(--y);
+  width: var(--w);
+  height: auto;
+  fill: var(--fill);
+  animation: swim var(--dur) linear infinite;
+  animation-delay: var(--at);
+}
+
+.rev {
+  animation-name: swimRev;
+}
+
+@keyframes swim {
+  from {
+    transform: translateX(105vw);
+  }
+  to {
+    transform: translateX(calc(-1 * var(--w) - 5vw));
+  }
+}
+
+@keyframes swimRev {
+  from {
+    transform: translateX(calc(-1 * var(--w) - 5vw)) scaleX(-1);
+  }
+  to {
+    transform: translateX(105vw) scaleX(-1);
+  }
+}
+
+.o1 .shark {
+  --w: 110px;
+  --y: 34%;
+  --dur: 46s;
+  --at: -19s;
+  --fill: color-mix(in srgb, var(--ink) 16%, transparent);
+}
+
+.o2 .shark {
+  --w: min(74vw, 440px);
+  --y: 26%;
+  --dur: 38s;
+  --at: -15s;
+  --fill: color-mix(in srgb, var(--dusk) 62%, transparent);
+}
+
+.o3 .shark {
+  --w: min(96vw, 600px);
+  --y: 22%;
+  --dur: 64s;
+  --at: -27s;
+  --fill: color-mix(in srgb, var(--foam) 7%, transparent);
+}
+
+/* ---------- zone content ---------- */
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.16em;
+  display: flex;
+  gap: 1.2em;
+  align-items: center;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.8;
+}
+
+.eyebrow span + span::before {
+  content: "";
+  display: inline-block;
+  width: 2.4em;
+  height: 1px;
+  background: currentColor;
+  vertical-align: middle;
+  margin-right: 1.2em;
+  opacity: 0.6;
+}
+
+.heading {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: var(--t-l);
+  line-height: 1.35;
+  letter-spacing: 0.06em;
+  text-wrap: balance;
+  margin: 0.5em 0 1.2em;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: 6.2em minmax(0, 1fr);
+}
+
+.facts dt,
+.facts dd {
+  padding: 0.85em 0;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 24%, transparent);
+}
+
+.facts dt {
+  font-size: var(--t-s);
+  opacity: 0.72;
+}
+
+.facts dd {
+  font-weight: 500;
+}
+
+.facts .id {
+  font-family: var(--mono);
+  letter-spacing: 0.04em;
+}
+
+.works {
+  display: grid;
+}
+
+.works li {
+  padding: 1.15em 0;
+  border-top: 1px solid color-mix(in srgb, var(--foam) 20%, transparent);
+  display: grid;
+  gap: 0.25em;
+}
+
+.workHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.3em 1em;
+}
+
+.works h3 {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.3rem;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+}
+
+.tag {
+  font-family: var(--mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.1em;
+  opacity: 0.7;
+}
+
+.works p {
+  font-size: var(--t-s);
+  opacity: 0.84;
+  max-width: 32em;
+}
+
+.links {
+  display: grid;
+}
+
+.links li {
+  border-top: 1px solid color-mix(in srgb, var(--foam) 18%, transparent);
+}
+
+.links li:last-child {
+  border-bottom: 1px solid color-mix(in srgb, var(--foam) 18%, transparent);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 5.6em minmax(0, 1fr) auto;
+  gap: 1em;
+  align-items: baseline;
+  padding: 1em 0;
+  color: inherit;
   text-decoration: none;
 }
 
-.linkBtn span {
-  color: #000080;
-  font-size: 0.78rem;
-  font-weight: 900;
+.row .k {
+  font-family: var(--mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.14em;
+  opacity: 0.65;
 }
 
-.linkBtn strong {
-  color: #c00080;
-  font-size: 0.9rem;
-  font-weight: 900;
+.row .v {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.15rem;
+  letter-spacing: 0.03em;
+  overflow-wrap: anywhere;
 }
 
-.linkBtn:hover,
-.linkBtn:focus-visible {
-  outline: 1px dotted #000;
-  outline-offset: -4px;
+.row .go {
+  font-family: var(--mono);
+  font-size: var(--t-s);
+  color: var(--lantern);
+  transition: transform 0.25s ease;
 }
 
-.linkBtn:active {
-  border-style: inset;
+.row:hover .go {
+  transform: translateX(4px);
 }
 
-/* ---- フッター ---- */
-
-.footer {
-  margin-top: 16px;
-  border-top: 2px groove #dfdfdf;
-  padding-top: 10px;
-  color: #444;
-  font-size: 0.8rem;
-  text-align: center;
+.row:hover .v {
+  text-shadow: 0 0 18px color-mix(in srgb, var(--lantern) 55%, transparent);
 }
 
-.footer p {
-  margin: 2px 0;
+.row:focus-visible {
+  outline: 2px solid var(--lantern);
+  outline-offset: 4px;
+  border-radius: 2px;
 }
 
-.counterNum {
-  border: 1px inset #dfdfdf;
-  background: #000;
-  color: #33ff33;
-  padding: 1px 6px;
-  font-weight: 900;
-  letter-spacing: 0.2em;
+.log {
+  margin-top: 3.2em;
+  font-family: var(--mono);
+  font-size: var(--t-s);
+  line-height: 2;
+  color: color-mix(in srgb, var(--foam) 78%, transparent);
+  white-space: pre-wrap;
 }
 
-.licenseLink {
-  color: #0000cc;
+.log b {
+  font-weight: 500;
+  color: var(--lantern);
 }
 
-.licenseLink:visited {
-  color: #800080;
+/* ---------- dive gauge ---------- */
+
+.gauge {
+  position: fixed;
+  z-index: 5;
+  inset: 0 0 0 auto;
+  width: calc(var(--gauge) + env(safe-area-inset-right, 0px));
+  pointer-events: none;
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
 }
 
-/* ---- レスポンシブ ---- */
-
-@media (max-width: 560px) {
-  .profRow {
-    grid-template-columns: 100px minmax(0, 1fr);
-  }
-
-  .linkGrid {
-    grid-template-columns: 1fr;
-  }
+.chip {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 0px) + 12px);
+  right: calc(env(safe-area-inset-right, 0px) + 10px);
+  white-space: nowrap;
+  padding: 0.38em 0.8em;
+  border-radius: 3px;
+  font-size: var(--t-xs);
+  letter-spacing: 0.08em;
+  background: color-mix(in srgb, var(--ink) 84%, transparent);
+  color: var(--foam);
+  display: flex;
+  gap: 0.9em;
+  align-items: baseline;
 }
 
-/* ---- reduced motion ---- */
+.chip b {
+  font-weight: 500;
+  color: var(--lantern);
+  font-size: var(--t-s);
+}
+
+.ruler {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 0px) + 56px);
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);
+  right: calc(env(safe-area-inset-right, 0px) + 14px);
+  width: 9px;
+  background: repeating-linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--foam) 80%, transparent) 0 1px,
+    color-mix(in srgb, var(--ink) 50%, transparent) 1px 2px,
+    transparent 2px 12px
+  );
+}
+
+.mark {
+  position: absolute;
+  right: -3px;
+  top: 0;
+  width: 15px;
+  height: 3px;
+  margin-top: -1px;
+  background: var(--lantern);
+  box-shadow: 0 0 0 1px var(--ink);
+  will-change: transform;
+}
 
 @media (prefers-reduced-motion: reduce) {
-  .marqueeTrack,
-  .blink,
-  .termCursor {
+  .rays::before,
+  .rays::after,
+  .hint::before {
     animation: none;
+  }
+
+  .shark {
+    animation: none;
+    transform: translateX(22vw);
+  }
+
+  .rev {
+    transform: translateX(22vw) scaleX(-1);
+  }
+
+  .row .go {
+    transition: none;
   }
 }
