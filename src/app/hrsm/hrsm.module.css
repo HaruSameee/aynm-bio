@@ -1,6 +1,6 @@
 /*
   春鮫 — 1ページの水柱。スクロール = 潜水。
-  水面 → 表層(10m) → 中深層(200m) → 漸深層(1,000m)。ゾーンの間は鮫が横切る外洋。
+  水面 → 表層(10m) → 中深層(200m) → 漸深層(1,000m) → 深海層(4,000m)。ゾーンの間は鮫が横切る外洋。
   右端の水深ゲージは DiveEffects.tsx が更新する。
 */
 
@@ -206,6 +206,52 @@
   max-width: 17em;
 }
 
+.sub {
+  font-size: var(--t-s);
+  opacity: 0.78;
+  max-width: 24em;
+}
+
+.cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.cta a {
+  font-family: var(--mono);
+  font-size: var(--t-s);
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  text-decoration: none;
+  padding: 0.45em 1.1em;
+  border: 1px solid color-mix(in srgb, var(--ink) 45%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--light) 55%, transparent);
+  transition: background 0.2s ease;
+}
+
+.cta a:first-child {
+  background: var(--ink);
+  color: var(--foam);
+  border-color: var(--ink);
+}
+
+.cta a:hover {
+  background: color-mix(in srgb, var(--light) 85%, transparent);
+}
+
+.cta a:first-child:hover {
+  background: var(--trench);
+}
+
+.cta a:focus-visible,
+.workLinks a:focus-visible {
+  outline: 2px solid var(--lantern);
+  outline-offset: 3px;
+}
+
 .hint {
   font-family: var(--mono);
   font-size: var(--t-xs);
@@ -399,6 +445,39 @@
   max-width: 32em;
 }
 
+.works .stack {
+  font-family: var(--mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.04em;
+  opacity: 0.62;
+}
+
+.workLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4em 1.4em;
+  margin-top: 0.2em;
+}
+
+.workLinks a {
+  font-family: var(--mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.1em;
+  color: var(--lantern);
+  text-decoration: none;
+}
+
+.workLinks a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.contact {
+  font-size: var(--t-s);
+  opacity: 0.84;
+  margin: -0.4em 0 1.6em;
+}
+
 .links {
   display: grid;
 }
@@ -455,6 +534,75 @@
   outline: 2px solid var(--lantern);
   outline-offset: 4px;
   border-radius: 2px;
+}
+
+.anon {
+  margin-top: 2.4em;
+  font-size: var(--t-s);
+  color: color-mix(in srgb, var(--foam) 78%, transparent);
+}
+
+.anonTitle {
+  font-family: var(--mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.14em;
+  opacity: 0.8;
+  margin-bottom: 0.6em;
+}
+
+.anon dl {
+  display: grid;
+  grid-template-columns: 6.4em minmax(0, 1fr);
+  row-gap: 0.5em;
+}
+
+.anon dt {
+  font-family: var(--mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.12em;
+  opacity: 0.6;
+  padding-top: 0.2em;
+}
+
+.anon dd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5em;
+  min-width: 0;
+}
+
+.anon a {
+  color: inherit;
+  text-underline-offset: 3px;
+}
+
+.anon a:hover {
+  color: var(--lantern);
+}
+
+.sid {
+  font-family: var(--mono);
+  font-size: var(--t-xs);
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+
+.copy {
+  font-family: var(--mono);
+  font-size: var(--t-xs);
+  color: var(--lantern);
+  background: none;
+  border: 1px solid color-mix(in srgb, var(--lantern) 50%, transparent);
+  border-radius: 999px;
+  padding: 0.1em 0.8em;
+  cursor: pointer;
+}
+
+.copy:focus-visible,
+.anon a:focus-visible {
+  outline: 2px solid var(--lantern);
+  outline-offset: 3px;
 }
 
 .log {
@@ -550,4 +698,44 @@
   .row .go {
     transition: none;
   }
+}
+
+/* 仕事の外の話。表層の .facts と同じ並びを暗い海の色で */
+.hobbies {
+  display: grid;
+  grid-template-columns: 8.6em minmax(0, 1fr);
+}
+
+.hobbies dt,
+.hobbies dd {
+  padding: 0.85em 0;
+  border-top: 1px solid color-mix(in srgb, var(--foam) 16%, transparent);
+}
+
+.hobbies dt {
+  font-size: var(--t-s);
+  opacity: 0.68;
+}
+
+.hobbies dd {
+  color: color-mix(in srgb, var(--foam) 90%, transparent);
+}
+
+/* いちばん早く届く連絡先の印 */
+.main {
+  display: inline-block;
+  margin-left: 0.7em;
+  padding: 0.1em 0.55em;
+  border: 1px solid var(--lantern);
+  border-radius: 999px;
+  color: var(--lantern);
+  font-family: var(--mono);
+  font-size: var(--t-xs);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  vertical-align: 0.15em;
+}
+
+.anon + .anonTitle {
+  margin-top: 2.4em;
 }
