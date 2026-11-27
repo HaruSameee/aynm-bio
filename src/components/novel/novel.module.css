@@ -332,6 +332,7 @@
   margin-top: 1em;
 }
 
+.prose :global(h1),
 .prose :global(h2),
 .prose :global(h3),
 .prose :global(h4),
@@ -342,9 +343,14 @@
   line-height: 1.45;
 }
 
+.prose > div:first-child > :global(h1:first-child),
 .prose > div:first-child > :global(h2:first-child),
 .prose > div:first-child > :global(h3:first-child) {
   margin-top: 0;
+}
+
+.prose :global(h1) {
+  font-size: 1.6em;
 }
 
 .prose :global(h2) {

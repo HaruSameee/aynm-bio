@@ -17,6 +17,8 @@ export type NovelOptions = {
   shiftHeadings?: boolean;
   /** 単独の改行を <br> にする（DB の記事の既定に合わせる） */
   breaks?: boolean;
+  /** 本文の先頭がこのタイトルと同じ h1 なら省く（ページのタイトルと重なるので） */
+  title?: string;
 };
 
 function escapeHtml(value: string) {
@@ -91,12 +93,23 @@ function headingText(token: Token) {
 
 export function renderNovelPages(
   body: string,
-  { shiftHeadings = false, breaks = true }: NovelOptions = {},
+  { shiftHeadings = false, breaks = true, title }: NovelOptions = {},
 ): NovelPage[] {
   const marked = new Marked({ gfm: true, breaks });
   const { body: prepared, notes } = extractFootnotes(body);
   const tokens = marked.lexer(prepared);
   const links = tokens.links;
+  const firstIndex = tokens.findIndex((token) => token.type !== "space");
+  const first = tokens[firstIndex];
+
+  if (
+    title &&
+    first?.type === "heading" &&
+    (first as Tokens.Heading).depth === 1 &&
+    (first as Tokens.Heading).text.trim() === title.trim()
+  ) {
+    tokens.splice(firstIndex, 1);
+  }
 
   if (shiftHeadings) {
     for (const token of tokens) {

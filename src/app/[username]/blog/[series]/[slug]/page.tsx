@@ -100,7 +100,7 @@ export default async function SeriesPostPage({ params }: PageProps) {
         choices={choices}
         dateLabel={formatBlogDateTime(result.post.publishedAt)}
         kicker={`${result.series.title}　${episode(result.post, currentIndex)}`}
-        pages={renderNovelPages(result.post.body)}
+        pages={renderNovelPages(result.post.body, { title: result.post.title })}
         speaker="春鮫"
         storageKey={`series:${result.series.slug}/${result.post.slug}`}
         title={result.post.title}

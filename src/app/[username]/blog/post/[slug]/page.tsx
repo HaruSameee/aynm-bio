@@ -36,7 +36,7 @@ async function loadPost(slug: string) {
       publishedAt: post.publishedAt,
       speaker: "春鮫",
       origin: null as string | null,
-      pages: renderNovelPages(post.body),
+      pages: renderNovelPages(post.body, { title: post.title }),
     };
   }
 
