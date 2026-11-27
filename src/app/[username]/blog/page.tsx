@@ -1,12 +1,20 @@
-import Link from "next/link";
-import { and, count, desc, eq, isNull, lte } from "drizzle-orm";
+import type { Metadata } from "next";
+import { and, asc, desc, eq, isNull, lte } from "drizzle-orm";
 
+import NovelArchive, { type ArchiveEntry } from "@/components/novel/NovelArchive";
+import NovelStage from "@/components/novel/NovelStage";
 import { db } from "@/db";
 import { posts, series } from "@/db/schema";
 import { formatBlogDate, requireOwnerBlogUsername } from "@/lib/blog";
+import { getPublishedStaticPosts } from "@/lib/static-posts";
 
 type PageProps = {
   params: Promise<{ username: string }>;
+};
+
+export const metadata: Metadata = {
+  title: "ブログ | 春鮫",
+  description: "HRSM（はるさめ）のブログ。開発日誌と、ときどき単発の記事。",
 };
 
 export default async function BlogIndexPage({ params }: PageProps) {
@@ -14,101 +22,123 @@ export default async function BlogIndexPage({ params }: PageProps) {
   const ownerUsername = await requireOwnerBlogUsername(username);
   const now = new Date();
 
-  const seriesCards = await db
+  const seriesRows = await db
     .select({
       id: series.id,
       slug: series.slug,
       title: series.title,
       description: series.description,
-      coverImageUrl: series.coverImageUrl,
-      postCount: count(posts.id),
+      createdAt: series.createdAt,
+      postSlug: posts.slug,
+      publishedAt: posts.publishedAt,
     })
     .from(series)
     .innerJoin(
       posts,
       and(eq(posts.seriesId, series.id), lte(posts.publishedAt, now)),
     )
-    .groupBy(series.id)
-    .orderBy(desc(series.createdAt));
+    .orderBy(desc(series.createdAt), asc(posts.seriesOrder));
 
-  const standalonePosts = await db
+  const seriesMap = new Map<
+    string,
+    {
+      slug: string;
+      title: string;
+      description: string | null;
+      postSlugs: string[];
+      latest: Date | null;
+    }
+  >();
+
+  for (const row of seriesRows) {
+    const item = seriesMap.get(row.id) ?? {
+      slug: row.slug,
+      title: row.title,
+      description: row.description,
+      postSlugs: [],
+      latest: null,
+    };
+
+    item.postSlugs.push(row.postSlug);
+
+    if (row.publishedAt && (!item.latest || row.publishedAt > item.latest)) {
+      item.latest = row.publishedAt;
+    }
+
+    seriesMap.set(row.id, item);
+  }
+
+  const seriesEntries: ArchiveEntry[] = [...seriesMap.values()].map((item) => ({
+    href: `/${ownerUsername}/blog/${item.slug}`,
+    badge: `全${item.postSlugs.length}話`,
+    title: item.title,
+    description: item.description,
+    sub: `最終更新 ${formatBlogDate(item.latest)}`,
+    readKeys: item.postSlugs.map((slug) => `series:${item.slug}/${slug}`),
+  }));
+
+  const dbStandalone = await db
     .select({
       slug: posts.slug,
       title: posts.title,
       publishedAt: posts.publishedAt,
     })
     .from(posts)
-    .where(and(isNull(posts.seriesId), lte(posts.publishedAt, now)))
-    .orderBy(desc(posts.publishedAt));
+    .where(and(isNull(posts.seriesId), lte(posts.publishedAt, now)));
+
+  const staticPosts = await getPublishedStaticPosts(now);
+  const dbSlugs = new Set(dbStandalone.map((post) => post.slug));
+
+  const standalone = [
+    ...dbStandalone.map((post) => ({
+      slug: post.slug,
+      title: post.title,
+      publishedAt: post.publishedAt,
+    })),
+    // 同じスラッグが DB にあれば DB を優先する
+    ...staticPosts
+      .filter((post) => !dbSlugs.has(post.slug))
+      .map((post) => ({
+        slug: post.slug,
+        title: post.title,
+        publishedAt: post.publishedAt as Date | null,
+      })),
+  ].sort(
+    (a, b) => (b.publishedAt?.getTime() ?? 0) - (a.publishedAt?.getTime() ?? 0),
+  );
+
+  const standaloneEntries: ArchiveEntry[] = standalone.map((post) => ({
+    href: `/${ownerUsername}/blog/post/${post.slug}`,
+    badge: "短編",
+    title: post.title,
+    sub: formatBlogDate(post.publishedAt),
+    readKeys: [`post:${post.slug}`],
+  }));
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-10 px-5 py-10 sm:px-6 lg:px-8">
-      <header className="space-y-3">
-        <p className="text-sm uppercase tracking-[0.24em] text-[#949ba4]">
-          {ownerUsername}/blog
-        </p>
-        <h1 className="text-4xl font-semibold text-white">Blog</h1>
-        <p className="max-w-2xl text-sm leading-6 text-[#b5bac1]">
-          Notes, essays, and series published from the same profile workspace.
-        </p>
-      </header>
-
-      <section className="space-y-4">
-        <h2 className="text-2xl font-semibold text-white">Series</h2>
-        <div className="grid gap-4 md:grid-cols-2">
-          {seriesCards.map((item) => (
-            <Link
-              className="overflow-hidden rounded-3xl border border-white/10 bg-[#10131e] transition hover:border-[#5865f2]"
-              href={`/${ownerUsername}/blog/${item.slug}`}
-              key={item.id}
-            >
-              {item.coverImageUrl ? (
-                <div
-                  className="h-40 w-full bg-cover bg-center"
-                  style={{ backgroundImage: `url(${item.coverImageUrl})` }}
-                />
-              ) : (
-                <div className="h-40 w-full bg-[linear-gradient(135deg,#181d30,#0d111b)]" />
-              )}
-              <div className="space-y-2 p-5">
-                <div className="text-xl font-semibold text-white">{item.title}</div>
-                <div className="text-sm leading-6 text-[#b5bac1]">
-                  {item.description || "No description provided yet."}
-                </div>
-                <div className="text-sm text-[#949ba4]">{item.postCount} posts</div>
-              </div>
-            </Link>
-          ))}
-          {seriesCards.length === 0 ? (
-            <div className="rounded-3xl border border-dashed border-white/10 bg-[#10131e] p-5 text-sm text-[#949ba4]">
-              No public series yet.
-            </div>
-          ) : null}
-        </div>
-      </section>
-
-      <section className="space-y-4">
-        <h2 className="text-2xl font-semibold text-white">Standalone posts</h2>
-        <div className="space-y-3">
-          {standalonePosts.map((post) => (
-            <Link
-              className="block rounded-3xl border border-white/10 bg-[#10131e] p-5 transition hover:border-[#5865f2]"
-              href={`/${ownerUsername}/blog/post/${post.slug}`}
-              key={post.slug}
-            >
-              <div className="text-xl font-semibold text-white">{post.title}</div>
-              <div className="mt-2 text-sm text-[#949ba4]">
-                {formatBlogDate(post.publishedAt)}
-              </div>
-            </Link>
-          ))}
-          {standalonePosts.length === 0 ? (
-            <div className="rounded-3xl border border-dashed border-white/10 bg-[#10131e] p-5 text-sm text-[#949ba4]">
-              No standalone posts published yet.
-            </div>
-          ) : null}
-        </div>
-      </section>
-    </main>
+    <NovelStage>
+      <NovelArchive
+        back={
+          ownerUsername === "hrsm"
+            ? { href: "/hrsm", label: "TITLE" }
+            : undefined
+        }
+        heading="記録の閲覧"
+        lead="開発の記録と、ときどき書いた単発の記事。"
+        prompt="どれを閲覧しますか？"
+        sections={[
+          {
+            label: "連載",
+            entries: seriesEntries,
+            empty: "まだ公開中の連載はありません。",
+          },
+          {
+            label: "単発の記事",
+            entries: standaloneEntries,
+            empty: "まだ公開中の記事はありません。",
+          },
+        ]}
+      />
+    </NovelStage>
   );
 }

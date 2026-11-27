@@ -1,7 +1,9 @@
-import Link from "next/link";
+import type { Metadata } from "next";
 import { and, asc, eq, lte } from "drizzle-orm";
 import { notFound } from "next/navigation";
 
+import NovelReader from "@/components/novel/NovelReader";
+import NovelStage from "@/components/novel/NovelStage";
 import { db } from "@/db";
 import { posts, series as seriesTable } from "@/db/schema";
 import {
@@ -9,19 +11,13 @@ import {
   normalizeBlogSlug,
   requireOwnerBlogUsername,
 } from "@/lib/blog";
-import { renderMarkdown } from "@/lib/markdown";
+import { renderNovelPages } from "@/lib/novel";
 
 type PageProps = {
   params: Promise<{ username: string; series: string; slug: string }>;
 };
 
-export default async function SeriesPostPage({ params }: PageProps) {
-  const { username, series, slug } = await params;
-  const ownerUsername = await requireOwnerBlogUsername(username);
-  const now = new Date();
-  const seriesSlug = normalizeBlogSlug(series);
-  const postSlug = normalizeBlogSlug(slug);
-
+async function loadPost(series: string, slug: string) {
   const [result] = await db
     .select({
       post: posts,
@@ -31,12 +27,30 @@ export default async function SeriesPostPage({ params }: PageProps) {
     .innerJoin(seriesTable, eq(posts.seriesId, seriesTable.id))
     .where(
       and(
-        eq(seriesTable.slug, seriesSlug),
-        eq(posts.slug, postSlug),
-        lte(posts.publishedAt, now),
+        eq(seriesTable.slug, normalizeBlogSlug(series)),
+        eq(posts.slug, normalizeBlogSlug(slug)),
+        lte(posts.publishedAt, new Date()),
       ),
     )
     .limit(1);
+
+  return result ?? null;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { series, slug } = await params;
+  const result = await loadPost(series, slug);
+
+  return {
+    title: result ? `${result.post.title} | 春鮫` : "ブログ | 春鮫",
+  };
+}
+
+export default async function SeriesPostPage({ params }: PageProps) {
+  const { username, series, slug } = await params;
+  const ownerUsername = await requireOwnerBlogUsername(username);
+  const now = new Date();
+  const result = await loadPost(series, slug);
 
   if (!result) {
     notFound();
@@ -58,64 +72,39 @@ export default async function SeriesPostPage({ params }: PageProps) {
     currentIndex >= 0 && currentIndex < seriesPosts.length - 1
       ? seriesPosts[currentIndex + 1]
       : null;
-  const html = await renderMarkdown(result.post.body);
+  const episode = (item: { seriesOrder: number | null }, index: number) =>
+    `第${item.seriesOrder ?? index + 1}話`;
+  const seriesHref = `/${ownerUsername}/blog/${result.series.slug}`;
+  const choices = [
+    nextPost
+      ? {
+          href: `${seriesHref}/${nextPost.slug}`,
+          label: "次の話へ",
+          sub: `${episode(nextPost, currentIndex + 1)}　${nextPost.title}`,
+        }
+      : null,
+    previousPost
+      ? {
+          href: `${seriesHref}/${previousPost.slug}`,
+          label: "前の話へ",
+          sub: `${episode(previousPost, currentIndex - 1)}　${previousPost.title}`,
+        }
+      : null,
+    { href: seriesHref, label: "話の一覧に戻る", sub: result.series.title },
+  ].filter((choice) => choice !== null);
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-3xl flex-col gap-8 px-5 py-10 sm:px-6 lg:px-8">
-      <header className="space-y-3">
-        <Link
-          className="text-sm font-medium text-[#8ea1ff] hover:text-white"
-          href={`/${ownerUsername}/blog/${result.series.slug}`}
-        >
-          Back to {result.series.title}
-        </Link>
-        <div className="text-sm text-[#949ba4]">
-          Episode {result.post.seriesOrder ?? currentIndex + 1}
-        </div>
-        <h1 className="text-4xl font-semibold text-white">{result.post.title}</h1>
-        <div className="text-sm text-[#949ba4]">
-          {formatBlogDateTime(result.post.publishedAt)}
-        </div>
-      </header>
-
-      <article
-        className="markdown-content max-w-none rounded-3xl border border-white/10 bg-[#10131e] px-6 py-6"
-        dangerouslySetInnerHTML={{ __html: html }}
+    <NovelStage>
+      <NovelReader
+        back={{ href: seriesHref, label: "BACK" }}
+        choices={choices}
+        dateLabel={formatBlogDateTime(result.post.publishedAt)}
+        kicker={`${result.series.title}　${episode(result.post, currentIndex)}`}
+        pages={renderNovelPages(result.post.body)}
+        speaker="春鮫"
+        storageKey={`series:${result.series.slug}/${result.post.slug}`}
+        title={result.post.title}
       />
-
-      <nav className="grid gap-3 md:grid-cols-2">
-        {previousPost ? (
-          <Link
-            className="rounded-3xl border border-white/10 bg-[#10131e] p-5 transition hover:border-[#5865f2]"
-            href={`/${ownerUsername}/blog/${result.series.slug}/${previousPost.slug}`}
-          >
-            <div className="text-sm text-[#949ba4]">Previous</div>
-            <div className="mt-1 text-lg font-semibold text-white">
-              {previousPost.title}
-            </div>
-          </Link>
-        ) : (
-          <div className="rounded-3xl border border-dashed border-white/10 bg-[#10131e] p-5 text-sm text-[#6f7680]">
-            Start of series
-          </div>
-        )}
-
-        {nextPost ? (
-          <Link
-            className="rounded-3xl border border-white/10 bg-[#10131e] p-5 text-right transition hover:border-[#5865f2]"
-            href={`/${ownerUsername}/blog/${result.series.slug}/${nextPost.slug}`}
-          >
-            <div className="text-sm text-[#949ba4]">Next</div>
-            <div className="mt-1 text-lg font-semibold text-white">
-              {nextPost.title}
-            </div>
-          </Link>
-        ) : (
-          <div className="rounded-3xl border border-dashed border-white/10 bg-[#10131e] p-5 text-right text-sm text-[#6f7680]">
-            End of series
-          </div>
-        )}
-      </nav>
-    </main>
+    </NovelStage>
   );
 }
