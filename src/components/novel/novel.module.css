@@ -511,6 +511,11 @@
   padding-bottom: 64px;
 }
 
+/* 全文表示では本文に重ならないよう、ボタンは上に置いたままにする */
+.readerNvl .systemBar {
+  position: static;
+}
+
 .nvlWindow {
   width: min(860px, calc(100% - 32px));
   margin: 8px auto 0;
