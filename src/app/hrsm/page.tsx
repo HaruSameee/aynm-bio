@@ -3,6 +3,7 @@ import { Fragment } from "react";
 import { DM_Mono, Klee_One, Zen_Kaku_Gothic_New } from "next/font/google";
 
 import DiveEffects from "./DiveEffects";
+import MailLink from "./MailLink";
 import styles from "./hrsm.module.css";
 
 const hand = Klee_One({
@@ -42,7 +43,7 @@ const skills = [
   { label: "声質変換", value: "RVC系モデルの推論、ONNX Runtimeでの実行" },
   { label: "バックエンド", value: "Rust（axum / sqlx）とPostgreSQL、Discord連携" },
   { label: "フロント", value: "TypeScript、Next.js、ブラウザ拡張" },
-  { label: "VRChat", value: "ワールド制作、ギミック、アバター改変" },
+  { label: "VRChat", value: "ギミック制作、アバター改変" },
 ];
 
 type Work = {
@@ -79,27 +80,17 @@ const works: ReadonlyArray<Work> = [
     links: [{ label: "GitHub", href: "https://github.com/HaruSameee/Scientific-Advisor-for-Voice" }],
   },
   {
-    name: "HoYoPass for Fx",
-    tag: "Firefox拡張 ・ 公開中",
-    text:
-      "HoYoLABのログインボーナスと交換コードを自動で受け取るFirefox拡張。バンドラを使わず、strictなTypeScriptだけで書いた。",
-    stack: "TypeScript / WebExtensions",
-    links: [
-      { label: "AMO", href: "https://addons.mozilla.org/ja/firefox/addon/hoyopass-for-fx-unofficial/" },
-      { label: "GitHub", href: "https://github.com/HaruSameee/hoyopass-firefox" },
-    ],
-  },
-  {
-    name: "HResort",
-    tag: "VRChatワールド ・ 公開中",
-    text: "VRChatで公開しているワールド。Avatar Illusionerも置いてある。",
-  },
-  {
     name: "Avatar Illusioner",
     tag: "VRChatギミック ・ 無料配布",
     text: "アバターを分身として立体投影するギミック。",
     links: [{ label: "BOOTH", href: "https://haruhasame.booth.pm" }],
   },
+];
+
+/** スパム避けのため逆順で持ち、表示時に MailLink で組み立てる */
+const mails = [
+  { user: "msrh", domain: "ia.esum" },
+  { user: "msrh", domain: "il.kcoc" },
 ];
 
 const links = [
@@ -228,8 +219,13 @@ export default function HrsmPage() {
           <div className={styles.col}>
             <Eyebrow depth="1,000" zone="漸深層" />
             <h2 className={styles.heading}>つながる</h2>
-            <p className={styles.contact}>お仕事の相談は X の DM か、Discord からどうぞ。</p>
+            <p className={styles.contact}>お仕事の相談はメールか、X の DM へどうぞ。</p>
             <ul className={styles.links}>
+              {mails.map((m) => (
+                <li key={m.domain}>
+                  <MailLink domain={m.domain} user={m.user} />
+                </li>
+              ))}
               {links.map((l) => (
                 <li key={l.key}>
                   <a className={styles.row} href={l.href} rel="noopener noreferrer" target="_blank">
