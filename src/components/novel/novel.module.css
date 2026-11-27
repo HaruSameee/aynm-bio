@@ -144,29 +144,28 @@
 .seaWaves {
   position: absolute;
   inset: 0;
-  opacity: 0.5;
+  opacity: 0.55;
   background-image:
     repeating-linear-gradient(
       180deg,
-      transparent 0 9px,
-      rgba(255, 255, 255, 0.55) 9px 10px
+      transparent 0 11px,
+      rgba(255, 255, 255, 0.35) 11px 12px
     ),
-    repeating-linear-gradient(
-      90deg,
-      transparent 0 40px,
-      rgba(255, 255, 255, 0.4) 40px 70px,
-      transparent 70px 130px
-    );
-  mask-image: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0.2) 70%, transparent);
-  animation: nvShimmer 14s ease-in-out infinite alternate;
+    radial-gradient(ellipse 60px 2px at 20% 18%, rgba(255, 255, 255, 0.9), transparent),
+    radial-gradient(ellipse 90px 2px at 72% 30%, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(ellipse 70px 2px at 40% 46%, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(ellipse 110px 3px at 86% 58%, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(ellipse 80px 2px at 12% 70%, rgba(255, 255, 255, 0.55), transparent);
+  mask-image: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0.25) 75%, transparent);
+  animation: nvShimmer 9s ease-in-out infinite alternate;
 }
 
 @keyframes nvShimmer {
   from {
-    background-position: 0 0, 0 0;
+    background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
   }
   to {
-    background-position: 0 6px, 120px 0;
+    background-position: 0 6px, 24px 0, -30px 0, 18px 0, -24px 0, 30px 0;
   }
 }
 
@@ -653,6 +652,10 @@
   max-height: min(62vh, 560px);
 }
 
+.advText > :global(*:first-child) {
+  margin-top: 0;
+}
+
 .advText {
   animation: nvReveal 0.45s ease-out both;
 }
@@ -880,9 +883,12 @@
   left: 50%;
   z-index: 50;
   padding: 8px 18px;
+  width: max-content;
+  max-width: min(560px, calc(100% - 32px));
   transform: translateX(-50%);
-  border-radius: 999px;
-  background: rgba(43, 111, 136, 0.9);
+  border-radius: 14px;
+  background: rgba(43, 111, 136, 0.92);
+  line-height: 1.6;
   color: #fff;
   font-size: 13px;
 }

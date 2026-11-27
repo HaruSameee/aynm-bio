@@ -88,7 +88,7 @@ export default function NovelReader({
 
   const showToast = useCallback((message: string) => {
     setToast(message);
-    window.setTimeout(() => setToast(null), 1600);
+    window.setTimeout(() => setToast(null), message.length > 30 ? 5000 : 1600);
   }, []);
 
   const changeMode = useCallback((next: Mode) => {
@@ -394,6 +394,18 @@ export default function NovelReader({
           aria-live="polite"
           className={`${styles.advWindow} ${current.wide ? styles.advWide : ""}`}
           onClick={(event) => {
+            // ADV では脚注の行き先が同じページに無いので、中身をその場で見せる
+            const footnote =
+              event.target instanceof Element
+                ? event.target.closest<HTMLAnchorElement>(".nv-fnref a")
+                : null;
+
+            if (footnote) {
+              event.preventDefault();
+              showToast(`注：${footnote.title}`);
+              return;
+            }
+
             if (!isInteractive(event.target) && !window.getSelection()?.toString()) {
               advance();
             }
