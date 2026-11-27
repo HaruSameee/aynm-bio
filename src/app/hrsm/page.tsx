@@ -117,7 +117,7 @@ const elsewhere: ReadonlyArray<Row> = [
 const hobbies = [
   { label: "VRChat", value: "写真とアバター改変。ふだんは座ってのんびりしてる" },
   { label: "Beat Saber", value: "うどんセイバーも本家も。テック譜面もダンス譜面も" },
-  { label: "ポケモンユナイト", value: "いちばん本気でやってるゲーム" },
+  { label: "ポケモンユナイト", value: "得意はインテレオン" },
   { label: "歌", value: "カラオケとボイトレ。十八番は東京テディベア" },
   { label: "MMD", value: "中学のころから。IAとゆかりさんがうちにいる" },
 ];
