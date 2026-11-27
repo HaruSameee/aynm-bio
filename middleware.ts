@@ -4,7 +4,7 @@ import { auth } from "@/auth";
 
 export default auth((request) => {
   if (!request.auth) {
-    return NextResponse.redirect(new URL("/", request.nextUrl.origin));
+    return NextResponse.redirect(new URL("/login", request.nextUrl.origin));
   }
 
   return NextResponse.next();
