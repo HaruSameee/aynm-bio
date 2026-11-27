@@ -536,6 +536,75 @@
   border-radius: 2px;
 }
 
+.anon {
+  margin-top: 2.4em;
+  font-size: var(--t-s);
+  color: color-mix(in srgb, var(--foam) 78%, transparent);
+}
+
+.anonTitle {
+  font-family: var(--mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.14em;
+  opacity: 0.8;
+  margin-bottom: 0.6em;
+}
+
+.anon dl {
+  display: grid;
+  grid-template-columns: 6.4em minmax(0, 1fr);
+  row-gap: 0.5em;
+}
+
+.anon dt {
+  font-family: var(--mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.12em;
+  opacity: 0.6;
+  padding-top: 0.2em;
+}
+
+.anon dd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5em;
+  min-width: 0;
+}
+
+.anon a {
+  color: inherit;
+  text-underline-offset: 3px;
+}
+
+.anon a:hover {
+  color: var(--lantern);
+}
+
+.sid {
+  font-family: var(--mono);
+  font-size: var(--t-xs);
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+
+.copy {
+  font-family: var(--mono);
+  font-size: var(--t-xs);
+  color: var(--lantern);
+  background: none;
+  border: 1px solid color-mix(in srgb, var(--lantern) 50%, transparent);
+  border-radius: 999px;
+  padding: 0.1em 0.8em;
+  cursor: pointer;
+}
+
+.copy:focus-visible,
+.anon a:focus-visible {
+  outline: 2px solid var(--lantern);
+  outline-offset: 3px;
+}
+
 .log {
   margin-top: 3.2em;
   font-family: var(--mono);

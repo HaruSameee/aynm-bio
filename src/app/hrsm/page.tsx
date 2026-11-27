@@ -3,6 +3,7 @@ import { Fragment } from "react";
 import { DM_Mono, Klee_One, Zen_Kaku_Gothic_New } from "next/font/google";
 
 import DiveEffects from "./DiveEffects";
+import AnonContacts from "./AnonContacts";
 import MailLink from "./MailLink";
 import styles from "./hrsm.module.css";
 
@@ -88,10 +89,7 @@ const works: ReadonlyArray<Work> = [
 ];
 
 /** スパム避けのため逆順で持ち、表示時に MailLink で組み立てる */
-const mails = [
-  { user: "msrh", domain: "ia.esum" },
-  { user: "msrh", domain: "il.kcoc" },
-];
+const mails = [{ user: "msrh", domain: "ia.esum" }];
 
 const links = [
   { key: "GITHUB", label: "HaruSameee", href: "https://github.com/HaruSameee" },
@@ -236,6 +234,8 @@ export default function HrsmPage() {
                 </li>
               ))}
             </ul>
+
+            <AnonContacts />
 
             <pre className={styles.log}>
               {"> せんすい かいし ...... "}
