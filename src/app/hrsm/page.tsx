@@ -115,9 +115,9 @@ const elsewhere: ReadonlyArray<Row> = [
 
 /** 仕事の外でやっていること */
 const hobbies = [
-  { label: "VRChat", value: "うどんセイバー、写真、アバター改変。ふだんは座ってのんびりしてる" },
-  { label: "Beat Saber", value: "Expert+ / ★9くらい。テック譜面もダンス譜面も" },
-  { label: "競技ゲーム", value: "Fortnite FNCS Grand Finals、ポケモンユナイト WCS 5月予選優勝、Apex プレデター" },
+  { label: "VRChat", value: "写真とアバター改変。ふだんは座ってのんびりしてる" },
+  { label: "Beat Saber", value: "うどんセイバーも本家も。テック譜面もダンス譜面も" },
+  { label: "ポケモンユナイト", value: "いちばん本気でやってるゲーム" },
   { label: "歌", value: "カラオケとボイトレ。十八番は東京テディベア" },
   { label: "MMD", value: "中学のころから。IAとゆかりさんがうちにいる" },
 ];

@@ -703,7 +703,7 @@
 /* 仕事の外の話。表層の .facts と同じ並びを暗い海の色で */
 .hobbies {
   display: grid;
-  grid-template-columns: 7.4em minmax(0, 1fr);
+  grid-template-columns: 8.6em minmax(0, 1fr);
 }
 
 .hobbies dt,
