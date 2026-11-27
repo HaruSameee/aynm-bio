@@ -206,6 +206,52 @@
   max-width: 17em;
 }
 
+.sub {
+  font-size: var(--t-s);
+  opacity: 0.78;
+  max-width: 24em;
+}
+
+.cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.cta a {
+  font-family: var(--mono);
+  font-size: var(--t-s);
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  text-decoration: none;
+  padding: 0.45em 1.1em;
+  border: 1px solid color-mix(in srgb, var(--ink) 45%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--light) 55%, transparent);
+  transition: background 0.2s ease;
+}
+
+.cta a:first-child {
+  background: var(--ink);
+  color: var(--foam);
+  border-color: var(--ink);
+}
+
+.cta a:hover {
+  background: color-mix(in srgb, var(--light) 85%, transparent);
+}
+
+.cta a:first-child:hover {
+  background: var(--trench);
+}
+
+.cta a:focus-visible,
+.workLinks a:focus-visible {
+  outline: 2px solid var(--lantern);
+  outline-offset: 3px;
+}
+
 .hint {
   font-family: var(--mono);
   font-size: var(--t-xs);
@@ -397,6 +443,39 @@
   font-size: var(--t-s);
   opacity: 0.84;
   max-width: 32em;
+}
+
+.works .stack {
+  font-family: var(--mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.04em;
+  opacity: 0.62;
+}
+
+.workLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4em 1.4em;
+  margin-top: 0.2em;
+}
+
+.workLinks a {
+  font-family: var(--mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.1em;
+  color: var(--lantern);
+  text-decoration: none;
+}
+
+.workLinks a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.contact {
+  font-size: var(--t-s);
+  opacity: 0.84;
+  margin: -0.4em 0 1.6em;
 }
 
 .links {

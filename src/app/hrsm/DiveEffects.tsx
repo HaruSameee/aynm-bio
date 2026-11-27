@@ -6,7 +6,7 @@ import styles from "./hrsm.module.css";
 
 /** 各ゾーンの見出しがこの水深に来るように、スクロール位置を水深へ写像する */
 const ZONE_DEPTHS: ReadonlyArray<readonly [id: string, depth: number]> = [
-  ["about", 10],
+  ["skills", 10],
   ["works", 200],
   ["links", 1000],
 ];

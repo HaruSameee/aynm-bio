@@ -28,7 +28,8 @@ const mono = DM_Mono({
 
 export const metadata: Metadata = {
   title: "春鮫 | HRSM",
-  description: "VRChatでワールドとギミックを作っている、HRSM（はるさめ）のページ。",
+  description:
+    "Rustでリアルタイム音声処理と声質変換を書いている、HRSM（はるさめ）のポートフォリオ。",
 };
 
 export const viewport: Viewport = {
@@ -36,52 +37,81 @@ export const viewport: Viewport = {
   themeColor: "#f6fbf9",
 };
 
-const facts = [
-  { label: "なまえ", value: "HRSM（はるさめ）" },
-  { label: "VRChat", value: "hrs0_0m", mono: true },
-  { label: "つくるもの", value: "ワールド、ギミック、アバター改変" },
-  { label: "しごと", value: "フリーランスのエンジニア（Rust / TypeScript）" },
-  { label: "いる場所", value: "Discordコミュニティ「illusion」" },
+const skills = [
+  { label: "音声DSP", value: "リアルタイムの音声入出力、フォルマント・ピッチ処理（STFT / ケプストラム）" },
+  { label: "声質変換", value: "RVC系モデルの推論、ONNX Runtimeでの実行" },
+  { label: "バックエンド", value: "Rust（axum / sqlx）とPostgreSQL、Discord連携" },
+  { label: "フロント", value: "TypeScript、Next.js、ブラウザ拡張" },
+  { label: "VRChat", value: "ワールド制作、ギミック、アバター改変" },
 ];
 
-const works = [
-  {
-    name: "HResort",
-    tag: "ワールド ・ 公開中",
-    text: "VRChatで公開しているワールド。Avatar Illusionerも置いてあります。",
-  },
-  {
-    name: "Avatar Illusioner",
-    tag: "ギミック ・ 無料配布",
-    text: "アバターを分身として立体投影するギミック。BOOTHで配っています。",
-  },
+type Work = {
+  name: string;
+  tag: string;
+  text: string;
+  stack?: string;
+  links?: ReadonlyArray<{ label: string; href: string }>;
+};
+
+const works: ReadonlyArray<Work> = [
   {
     name: "Assay",
-    tag: "Webサービス",
-    text: "ポケモンユナイトの非公式ランクマッチ。",
-  },
-  {
-    name: "RFST",
-    tag: "ツール ・ Rust",
-    text: "声のフォルマントをリアルタイムで動かすツール。",
+    tag: "Webサービス ・ 運用終了",
+    text:
+      "ポケモンユナイトの非公式ランクマッチ。設計から本番構築まで12日で作り、開幕初日に340人が参加した。2vCPU / 6GBのVPS 1台、月20ドルほどで回しきった。",
+    stack: "Rust / axum / sqlx / PostgreSQL / Discord OAuth",
+    links: [{ label: "GitHub", href: "https://github.com/HaruSameee/Assay" }],
   },
   {
     name: "Rust-VC",
     tag: "ツール ・ Rust",
-    text: "音声変換のRVCを、Rustで再実装したもの。",
+    text:
+      "RVCのリアルタイム声質変換を、Rust と ONNX Runtime で動かす推論エンジン。音声の入出力、SOLAでのつなぎ、無音判定までRustで書いた。",
+    stack: "Rust / Tauri / ONNX Runtime / cpal",
+    links: [{ label: "GitHub", href: "https://github.com/HaruSameee/Rust-VoiceConversion" }],
+  },
+  {
+    name: "RFST",
+    tag: "ツール ・ Rust",
+    text:
+      "フォルマントとピッチを別々に動かせる、リアルタイムのボイスエフェクト。ケプストラムで声の響きだけを取り出して動かす。",
+    stack: "Rust / rustfft / cpal / egui",
+    links: [{ label: "GitHub", href: "https://github.com/HaruSameee/Scientific-Advisor-for-Voice" }],
+  },
+  {
+    name: "HoYoPass for Fx",
+    tag: "Firefox拡張 ・ 公開中",
+    text:
+      "HoYoLABのログインボーナスと交換コードを自動で受け取るFirefox拡張。バンドラを使わず、strictなTypeScriptだけで書いた。",
+    stack: "TypeScript / WebExtensions",
+    links: [
+      { label: "AMO", href: "https://addons.mozilla.org/ja/firefox/addon/hoyopass-for-fx-unofficial/" },
+      { label: "GitHub", href: "https://github.com/HaruSameee/hoyopass-firefox" },
+    ],
+  },
+  {
+    name: "HResort",
+    tag: "VRChatワールド ・ 公開中",
+    text: "VRChatで公開しているワールド。Avatar Illusionerも置いてある。",
+  },
+  {
+    name: "Avatar Illusioner",
+    tag: "VRChatギミック ・ 無料配布",
+    text: "アバターを分身として立体投影するギミック。",
+    links: [{ label: "BOOTH", href: "https://haruhasame.booth.pm" }],
   },
 ];
 
 const links = [
+  { key: "GITHUB", label: "HaruSameee", href: "https://github.com/HaruSameee" },
+  { key: "X", label: "@hrs0_0m", href: "https://x.com/hrs0_0m" },
+  { key: "DISCORD", label: "illusion", href: "https://discord.gg/mDQHNAM22X" },
+  { key: "BOOTH", label: "haruhasame", href: "https://haruhasame.booth.pm" },
   {
     key: "VRCHAT",
     label: "hrs0_0m",
     href: "https://vrchat.com/home/user/usr_4d291333-4bbd-4128-87c8-b8442f35d433",
   },
-  { key: "X", label: "@hrs0_0m", href: "https://x.com/hrs0_0m" },
-  { key: "BOOTH", label: "haruhasame", href: "https://haruhasame.booth.pm" },
-  { key: "GITHUB", label: "HaruSameee", href: "https://github.com/HaruSameee" },
-  { key: "DISCORD", label: "illusion", href: "https://discord.gg/mDQHNAM22X" },
 ];
 
 const SHARK_PATH =
@@ -123,7 +153,17 @@ export default function HrsmPage() {
               <p className={styles.handle}>
                 HRSM<span>はるさめ</span>
               </p>
-              <p className={styles.line}>VRChatでワールドとギミックを作っている、Rust書きです。</p>
+              <p className={styles.line}>
+                Rustでリアルタイム音声処理と声質変換を書いているエンジニア。
+              </p>
+              <p className={styles.sub}>フリーランスで開発の相談を受けています。</p>
+              <p className={styles.cta}>
+                <a href="https://github.com/HaruSameee" rel="noopener noreferrer" target="_blank">
+                  GitHub
+                </a>
+                <a href="#works">作品を見る</a>
+                <a href="#links">連絡する</a>
+              </p>
               <p className={styles.hint}>スクロールで潜る</p>
             </div>
           </div>
@@ -133,15 +173,15 @@ export default function HrsmPage() {
           <Shark />
         </div>
 
-        <section className={`${styles.zone} ${styles.shallows}`} id="about">
+        <section className={`${styles.zone} ${styles.shallows}`} id="skills">
           <div className={styles.col}>
             <Eyebrow depth="10" zone="表層" />
-            <h2 className={styles.heading}>この人について</h2>
+            <h2 className={styles.heading}>できること</h2>
             <dl className={styles.facts}>
-              {facts.map((f) => (
+              {skills.map((f) => (
                 <Fragment key={f.label}>
                   <dt>{f.label}</dt>
-                  <dd className={f.mono ? styles.id : undefined}>{f.value}</dd>
+                  <dd>{f.value}</dd>
                 </Fragment>
               ))}
             </dl>
@@ -164,6 +204,16 @@ export default function HrsmPage() {
                     <span className={styles.tag}>{w.tag}</span>
                   </div>
                   <p>{w.text}</p>
+                  {w.stack ? <p className={styles.stack}>{w.stack}</p> : null}
+                  {w.links ? (
+                    <p className={styles.workLinks}>
+                      {w.links.map((l) => (
+                        <a href={l.href} key={l.href} rel="noopener noreferrer" target="_blank">
+                          {l.label} →
+                        </a>
+                      ))}
+                    </p>
+                  ) : null}
                 </li>
               ))}
             </ul>
@@ -178,6 +228,7 @@ export default function HrsmPage() {
           <div className={styles.col}>
             <Eyebrow depth="1,000" zone="漸深層" />
             <h2 className={styles.heading}>つながる</h2>
+            <p className={styles.contact}>お仕事の相談は X の DM か、Discord からどうぞ。</p>
             <ul className={styles.links}>
               {links.map((l) => (
                 <li key={l.key}>
