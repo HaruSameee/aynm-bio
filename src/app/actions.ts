@@ -13,7 +13,7 @@ export async function saveProfile(formData: FormData) {
   const session = await auth();
 
   if (!session?.user?.id) {
-    redirect("/");
+    redirect("/login");
   }
 
   const username = assertValidUsername(String(formData.get("username") ?? ""));

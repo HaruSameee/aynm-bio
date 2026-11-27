@@ -1,4 +1,4 @@
-const RESERVED_USERNAMES = new Set(["api", "dashboard", "_next"]);
+const RESERVED_USERNAMES = new Set(["api", "dashboard", "login", "_next"]);
 const USERNAME_REGEX = /^[a-z0-9_-]{3,32}$/;
 
 export function normalizeUsername(value: string) {
