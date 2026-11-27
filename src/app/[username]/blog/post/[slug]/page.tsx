@@ -11,7 +11,7 @@ import {
   normalizeBlogSlug,
   requireOwnerBlogUsername,
 } from "@/lib/blog";
-import { renderNovelPages } from "@/lib/novel";
+import { excerptOf, renderNovelPages } from "@/lib/novel";
 import { getStaticPost } from "@/lib/static-posts";
 
 type PageProps = {
@@ -36,6 +36,7 @@ async function loadPost(slug: string) {
       publishedAt: post.publishedAt,
       speaker: "春鮫",
       origin: null as string | null,
+      description: excerptOf(post.body),
       pages: renderNovelPages(post.body, { title: post.title }),
     };
   }
@@ -52,6 +53,7 @@ async function loadPost(slug: string) {
     publishedAt: staticPost.publishedAt as Date | null,
     speaker: staticPost.speaker ?? "春鮫",
     origin: staticPost.origin,
+    description: excerptOf(staticPost.body),
     // 移してきた記事は元サイトの表示（見出しを1段下げ、単独の改行は詰める）に合わせる
     pages: renderNovelPages(staticPost.body, { shiftHeadings: true, breaks: false }),
   };
@@ -63,6 +65,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   return {
     title: post ? `${post.title} | 春鮫` : "ブログ | 春鮫",
+    description: post?.description,
   };
 }
 
