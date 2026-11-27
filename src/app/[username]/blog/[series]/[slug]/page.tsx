@@ -11,7 +11,7 @@ import {
   normalizeBlogSlug,
   requireOwnerBlogUsername,
 } from "@/lib/blog";
-import { renderNovelPages } from "@/lib/novel";
+import { excerptOf, renderNovelPages } from "@/lib/novel";
 
 type PageProps = {
   params: Promise<{ username: string; series: string; slug: string }>;
@@ -43,6 +43,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   return {
     title: result ? `${result.post.title} | 春鮫` : "ブログ | 春鮫",
+    description: result ? excerptOf(result.post.body) : undefined,
   };
 }
 

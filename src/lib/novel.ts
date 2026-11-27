@@ -176,3 +176,29 @@ export function renderNovelPages(
 
   return pages;
 }
+
+/** 検索結果や共有カードに出す、本文冒頭の短い抜粋 */
+export function excerptOf(body: string, max = 120) {
+  const tokens = new Marked({ gfm: true }).lexer(extractFootnotes(body).body);
+  const paragraph = tokens.find(
+    (token) => token.type === "paragraph" && !/^\s*!\[/.test(token.raw),
+  ) as Tokens.Paragraph | undefined;
+
+  if (!paragraph) {
+    return undefined;
+  }
+
+  const text = paragraph.text
+    .replace(/<[^>]+>/g, "")
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
+    .replace(/[*_~`]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (!text) {
+    return undefined;
+  }
+
+  return text.length > max ? `${text.slice(0, max - 1)}…` : text;
+}
