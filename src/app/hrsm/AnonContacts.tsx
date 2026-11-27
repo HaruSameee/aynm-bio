@@ -30,15 +30,16 @@ export default function AnonContacts() {
     <div className={styles.anon}>
       <p className={styles.anonTitle}>匿名で連絡したい人向け</p>
       <dl>
-        <dt>MAIL</dt>
-        <dd>{mail ? <a href={`mailto:${mail}`}>{mail}</a> : "（表示中…）"}</dd>
         <dt>SESSION</dt>
         <dd>
           <code className={styles.sid}>{SESSION_ID}</code>
           <button className={styles.copy} onClick={copy} type="button">
             {copied ? "コピーした" : "コピー"}
           </button>
+          <span className={styles.main}>メイン</span>
         </dd>
+        <dt>MAIL</dt>
+        <dd>{mail ? <a href={`mailto:${mail}`}>{mail}</a> : "（表示中…）"}</dd>
         <dt>TELEGRAM</dt>
         <dd>
           <a href="https://t.me/hrs0_0m" rel="noopener noreferrer" target="_blank">

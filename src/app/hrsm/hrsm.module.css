@@ -1,6 +1,6 @@
 /*
   春鮫 — 1ページの水柱。スクロール = 潜水。
-  水面 → 表層(10m) → 中深層(200m) → 漸深層(1,000m)。ゾーンの間は鮫が横切る外洋。
+  水面 → 表層(10m) → 中深層(200m) → 漸深層(1,000m) → 深海層(4,000m)。ゾーンの間は鮫が横切る外洋。
   右端の水深ゲージは DiveEffects.tsx が更新する。
 */
 
@@ -698,4 +698,44 @@
   .row .go {
     transition: none;
   }
+}
+
+/* 仕事の外の話。表層の .facts と同じ並びを暗い海の色で */
+.hobbies {
+  display: grid;
+  grid-template-columns: 7.4em minmax(0, 1fr);
+}
+
+.hobbies dt,
+.hobbies dd {
+  padding: 0.85em 0;
+  border-top: 1px solid color-mix(in srgb, var(--foam) 16%, transparent);
+}
+
+.hobbies dt {
+  font-size: var(--t-s);
+  opacity: 0.68;
+}
+
+.hobbies dd {
+  color: color-mix(in srgb, var(--foam) 90%, transparent);
+}
+
+/* いちばん早く届く連絡先の印 */
+.main {
+  display: inline-block;
+  margin-left: 0.7em;
+  padding: 0.1em 0.55em;
+  border: 1px solid var(--lantern);
+  border-radius: 999px;
+  color: var(--lantern);
+  font-family: var(--mono);
+  font-size: var(--t-xs);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  vertical-align: 0.15em;
+}
+
+.anon + .anonTitle {
+  margin-top: 2.4em;
 }

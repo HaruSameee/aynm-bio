@@ -8,15 +8,17 @@ import styles from "./hrsm.module.css";
 const ZONE_DEPTHS: ReadonlyArray<readonly [id: string, depth: number]> = [
   ["skills", 10],
   ["works", 200],
-  ["links", 1000],
+  ["hobbies", 1000],
+  ["links", 4000],
 ];
-const BOTTOM_DEPTH = 1200;
+const BOTTOM_DEPTH = 4200;
 
 function zoneName(depth: number) {
   if (depth < 1) return "水面";
   if (depth < 200) return "表層";
   if (depth < 1000) return "中深層";
-  return "漸深層";
+  if (depth < 4000) return "漸深層";
+  return "深海層";
 }
 
 type Particle = { x: number; y: number; r: number; s: number; p: number; k: number };

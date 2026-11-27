@@ -70,7 +70,10 @@ const works: ReadonlyArray<Work> = [
     text:
       "RVCのリアルタイム声質変換を、Rust と ONNX Runtime で動かす推論エンジン。音声の入出力、SOLAでのつなぎ、無音判定までRustで書いた。",
     stack: "Rust / Tauri / ONNX Runtime / cpal",
-    links: [{ label: "GitHub", href: "https://github.com/HaruSameee/Rust-VoiceConversion" }],
+    links: [
+      { label: "GitHub", href: "https://github.com/HaruSameee/Rust-VoiceConversion" },
+      { label: "開発日誌", href: "/hrsm/blog/rust-realtime-rvc-devlog" },
+    ],
   },
   {
     name: "RFST",
@@ -91,10 +94,17 @@ const works: ReadonlyArray<Work> = [
 /** スパム避けのため逆順で持ち、表示時に MailLink で組み立てる */
 const mails = [{ user: "msrh", domain: "ia.esum" }];
 
-const links = [
+type Row = { key: string; label: string; href: string; main?: boolean };
+
+/** お仕事の連絡先。main はいちばん早く返事できるところ */
+const contacts: ReadonlyArray<Row> = [
+  { key: "DISCORD", label: "illusion", href: "https://discord.gg/mDQHNAM22X", main: true },
+  { key: "X", label: "@hrs0_0m", href: "https://x.com/hrs0_0m", main: true },
+];
+
+const elsewhere: ReadonlyArray<Row> = [
   { key: "GITHUB", label: "HaruSameee", href: "https://github.com/HaruSameee" },
-  { key: "X", label: "@hrs0_0m", href: "https://x.com/hrs0_0m" },
-  { key: "DISCORD", label: "illusion", href: "https://discord.gg/mDQHNAM22X" },
+  { key: "BLOG", label: "開発日誌など", href: "/hrsm/blog" },
   { key: "BOOTH", label: "haruhasame", href: "https://haruhasame.booth.pm" },
   {
     key: "VRCHAT",
@@ -102,6 +112,36 @@ const links = [
     href: "https://vrchat.com/home/user/usr_4d291333-4bbd-4128-87c8-b8442f35d433",
   },
 ];
+
+/** 仕事の外でやっていること */
+const hobbies = [
+  { label: "VRChat", value: "うどんセイバー、写真、アバター改変。ふだんは座ってのんびりしてる" },
+  { label: "Beat Saber", value: "Expert+ / ★9くらい。テック譜面もダンス譜面も" },
+  { label: "競技ゲーム", value: "Fortnite FNCS Grand Finals、ポケモンユナイト WCS 5月予選優勝、Apex プレデター" },
+  { label: "歌", value: "カラオケとボイトレ。十八番は東京テディベア" },
+  { label: "MMD", value: "中学のころから。IAとゆかりさんがうちにいる" },
+];
+
+const isExternal = (href: string) => /^https?:/.test(href);
+
+function LinkRow({ row }: { row: Row }) {
+  const ext = isExternal(row.href);
+  return (
+    <a
+      className={styles.row}
+      href={row.href}
+      rel={ext ? "noopener noreferrer" : undefined}
+      target={ext ? "_blank" : undefined}
+    >
+      <span className={styles.k}>{row.key}</span>
+      <span className={styles.v}>
+        {row.label}
+        {row.main ? <span className={styles.main}>メイン</span> : null}
+      </span>
+      <span className={styles.go}>→</span>
+    </a>
+  );
+}
 
 const SHARK_PATH =
   "M4,50C28,34 62,28 96,29L118,6C116,18 120,27 132,31C160,35 184,41 204,44L236,12C226,30 220,42 219,50L232,74C218,66 208,58 200,53C176,58 152,62 128,63L108,63L106,86C98,76 88,66 80,62C52,62 24,58 4,50Z";
@@ -151,6 +191,7 @@ export default function HrsmPage() {
                   GitHub
                 </a>
                 <a href="#works">作品を見る</a>
+                <a href="/hrsm/blog">ブログ</a>
                 <a href="#links">連絡する</a>
               </p>
               <p className={styles.hint}>スクロールで潜る</p>
@@ -197,7 +238,12 @@ export default function HrsmPage() {
                   {w.links ? (
                     <p className={styles.workLinks}>
                       {w.links.map((l) => (
-                        <a href={l.href} key={l.href} rel="noopener noreferrer" target="_blank">
+                        <a
+                          href={l.href}
+                          key={l.href}
+                          rel={isExternal(l.href) ? "noopener noreferrer" : undefined}
+                          target={isExternal(l.href) ? "_blank" : undefined}
+                        >
                           {l.label} →
                         </a>
                       ))}
@@ -213,34 +259,57 @@ export default function HrsmPage() {
           <Shark />
         </div>
 
-        <section className={`${styles.zone} ${styles.deep}`} id="links">
+        <section className={`${styles.zone} ${styles.deep}`} id="hobbies">
           <div className={styles.col}>
             <Eyebrow depth="1,000" zone="漸深層" />
+            <h2 className={styles.heading}>すきなこと</h2>
+            <dl className={styles.hobbies}>
+              {hobbies.map((f) => (
+                <Fragment key={f.label}>
+                  <dt>{f.label}</dt>
+                  <dd>{f.value}</dd>
+                </Fragment>
+              ))}
+            </dl>
+          </div>
+        </section>
+
+        <section className={`${styles.zone} ${styles.deep}`} id="links">
+          <div className={styles.col}>
+            <Eyebrow depth="4,000" zone="深海層" />
             <h2 className={styles.heading}>つながる</h2>
-            <p className={styles.contact}>お仕事の相談はメールか、X の DM へどうぞ。</p>
+            <p className={styles.contact}>
+              お仕事の相談は Discord か X の DM がいちばん早いです。メールでも受け付けています。
+            </p>
             <ul className={styles.links}>
+              {contacts.map((l) => (
+                <li key={l.key}>
+                  <LinkRow row={l} />
+                </li>
+              ))}
               {mails.map((m) => (
                 <li key={m.domain}>
                   <MailLink domain={m.domain} user={m.user} />
-                </li>
-              ))}
-              {links.map((l) => (
-                <li key={l.key}>
-                  <a className={styles.row} href={l.href} rel="noopener noreferrer" target="_blank">
-                    <span className={styles.k}>{l.key}</span>
-                    <span className={styles.v}>{l.label}</span>
-                    <span className={styles.go}>→</span>
-                  </a>
                 </li>
               ))}
             </ul>
 
             <AnonContacts />
 
+            <p className={styles.anonTitle}>ほかの場所</p>
+            <ul className={styles.links}>
+              {elsewhere.map((l) => (
+                <li key={l.key}>
+                  <LinkRow row={l} />
+                </li>
+              ))}
+            </ul>
+
+
             <pre className={styles.log}>
               {"> せんすい かいし ...... "}
               <b>OK</b>
-              {"\n> すいしん 1,000 m .... "}
+              {"\n> すいしん 4,000 m .... "}
               <b>とうたつ</b>
               {"\n> Rust コンパイル ..... "}
               <b>ERROR は 愛</b>
